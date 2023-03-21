@@ -6,9 +6,9 @@ import { toast } from 'react-toastify'
 
 
 function Login() {
-  
-  const {login} = useContext(UserContext)
 
+  const {login, user} = useContext(UserContext)
+  
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -17,7 +17,6 @@ function Login() {
     const { email, password } = formData
 
     const navigate = useNavigate()
-
 
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -55,14 +54,22 @@ function Login() {
         })
       }
   
-
+      if(user) {
+        return (
+          <div className="column">
+            <p>Már be vagy jelentkezve.</p>
+          </div>
+        )
+      }
+      
     return (
-        <>
+        <div className="column">
         <section className="hero has-background-grey is-small block">
             <div className='hero-body'>
                <p className='title has-text-light'>
-                <FaSignInAlt/> Belépés
-                </p> 
+                <span className="icon"><FaSignInAlt/></span> 
+                 <span> Belépés</span>
+                </p>
             </div>
             
         </section>
@@ -104,14 +111,19 @@ function Login() {
             </div>
             <div className="field is-fullwidth mt-5">
                 <div className="control">
-                  <button className="button has-background-grey has-text-light is-fullwidth">Belépek</button>
+                  <button className="button has-background-grey has-text-light">
+                    <span className="icon"><FaSignInAlt/></span>
+                    <span>Belépek</span>
+                    </button>
                 </div>
             </div>
             </form>
           </section>
-          </>
+          </div>
     )
 }
+
+
 
 export default Login
 

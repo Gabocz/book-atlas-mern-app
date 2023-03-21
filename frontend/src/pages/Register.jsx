@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaUser, FaEnvelope } from 'react-icons/fa'
+import { FaUser, FaEnvelope, FaCheck } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
 
@@ -65,7 +65,7 @@ function Register() {
           } 
     
     return (
-        <>
+        <div className="column">
         <section className="hero has-background-primary is-small block">
             <div className='hero-body'>
                <p className='title has-text-light'>
@@ -145,12 +145,15 @@ function Register() {
             </div>
             <div className="field is-fullwidth mt-5">
                 <div className="control">
-                  <button className="button has-background-primary has-text-light is-fullwidth">Regisztrálok</button>
+                  <button className="button has-background-primary has-text-light">
+                    <span className="icon"><FaCheck/></span>
+                    <span>Regisztrálok</span>
+                  </button>
                 </div>
             </div>
             </form>
           </section>
-          </>
+          </div>
     )
 }
 

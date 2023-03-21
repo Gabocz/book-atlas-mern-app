@@ -49,7 +49,7 @@ const UserContextProvider = ({ children }) => {
         loggedInUser.email = response.data.email
         loggedInUser.name = response.data.name
         localStorage.setItem('user', JSON.stringify(loggedInUser))
-        setUser(response.data)
+        setUser(loggedInUser)
 
       }
   

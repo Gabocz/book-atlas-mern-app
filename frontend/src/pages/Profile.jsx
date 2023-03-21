@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { FaUser, FaEnvelope } from 'react-icons/fa'
+import { FaUser, FaEnvelope, FaUserEdit, FaSave } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
 import axios from 'axios'
@@ -69,21 +69,38 @@ function Profile() {
   }
 
     return (
-        <div className='container mt-6'>
-        <header className='block'>
-            <h1 className="title">Profilom</h1>
-            <h2 className='subtitle'>Adataim</h2>
+        <div className="column">
+        <header className="message">
+          <div className="message-header">
+            <p>Profilom</p>
+            </div>
         </header>
         <main>
-            <div className="block">
-                <button className="button" onClick={() => {
+             <section className="media">
+              <div className="media-content">
+              <div className="field">
+                <div className="control">
+                  <button className="button" onClick={() => {
                     changeDetails && onSubmit()
                     setChangeDetails((prevState) => !prevState)
                 }}>
-                    {changeDetails ? 'Mentés' : 'Szerkeszt'}
-                </button>
-            </div>
-            <section className='block'>
+                    {changeDetails ? (
+                    <>
+                    <span className="icon"><FaSave/></span>
+                    <span>Mentés</span>
+                    </>
+                    )
+                     : (
+                      <>
+                    <span className="icon"><FaUserEdit/></span>
+                    <span>Szerkeszt</span>
+                    </>
+                     )
+                     }
+                  </button>
+                </div>
+              </div>
+              
           <form onSubmit={onSubmit}>
             <div className="field">
                 <label id="name" className="label">Név</label>
@@ -120,13 +137,14 @@ function Profile() {
                   </div>
             </div>
             </form>
-          </section>
-            <section className='block'>
-              <h1 className='is-size-4 my-3'>Feltöltéseim</h1>
+            </div>
+            </section>
+            <section className="panel mt-3">
+              <h3 className="panel-heading">Feltöltéseim</h3>
           {usersBooks.length > 0 ? (
              <ul>
                {usersBooks.map(book => (
-                <Link key={book._id} to={API_URL + book._id}>
+                <Link key={book._id} to={API_URL + book._id} className="panel-block">
                   <li>{book.author}: {book.title}</li>
                 </Link>
                ))}

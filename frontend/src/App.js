@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import { UserContextProvider } from "./context/UserContext";
+import { UserContextProvider} from "./context/UserContext";
 import 'react-toastify/dist/ReactToastify.css'
 import Navbar from './components/Navbar'
 import PrivateRoute from './components/PrivateRoute'
@@ -11,16 +12,22 @@ import NewBook from './pages/NewBook'
 import Profile from './pages/Profile'
 import Book from './pages/Book';
 import EditBook from './pages/EditBook';
+import SearchResults from './pages/SearchResults';
+
+
 
 
 function App() {
- 
+
+    const [foundBooks, setFoundBooks] = useState([])
+
+
    return (
     <>
     <UserContextProvider>
     <Router>
     <div className='container is-fluid'>
-    <Navbar/>
+    <Navbar setFoundBooks={setFoundBooks}/>
     <Routes>
       <Route path='/' element={<Home/>} />
       <Route path='books/:id' element={<Book/>}/>
@@ -34,6 +41,8 @@ function App() {
       </Route>
       <Route path='/users/:id' element={<PrivateRoute/>}>
       <Route path='/users/:id' element={<Profile/>}/>
+      </Route>
+      <Route path='/books/search-results' element={<SearchResults foundBooks={foundBooks}/>}>
       </Route>
     </Routes>
      </div>

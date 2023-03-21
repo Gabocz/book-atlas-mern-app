@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { FaEdit } from 'react-icons/fa'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import BackButton from '../components/BackButton'
 import axios from 'axios'
 import { UserContext } from '../context/UserContext'
 
@@ -9,6 +11,11 @@ const API_URL = '/books/'
 function Book() {
     const {user} = useContext(UserContext)
     const [ book, setBook ] = useState(null)
+    const [ mapCenter, setMapCenter ] = useState({
+      lat: 46.2530102, 
+      lng: 20.1414253
+    })
+    
     const params = useParams()
 
     useEffect(() => {
@@ -17,6 +24,7 @@ function Book() {
             const res = await axios.get(API_URL + params.id)
             if(res.data) {
                 setBook(res.data)
+                setMapCenter(res.data.geolocation)
             } else {
               console.log('Nem találtam a könyvet.')
             }
@@ -27,14 +35,10 @@ function Book() {
         fetchBook()
     }, [params.id])
 
-    const handleClick = () => {
-
-    }
-
    
     return (
 
-      <div className="container mt-4">
+      <div className="column">
         {book ? (
           <div className="columns is-multiline">
             <div className="column is-half">
@@ -61,29 +65,44 @@ function Book() {
       <div className="card">
       <MapContainer
         style={{height: "450px", width: "100%"}} 
-        center={[book.geolocation.lat, book.geolocation.lng]} 
+        center={[mapCenter.lat, mapCenter.lng]}
         zoom={12} 
         scrollWheelZoom={false}  
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-        <Marker position={[book.geolocation.lat, book.geolocation.lng]}>
+        <Marker position={[mapCenter.lat, mapCenter.lng]}>
           <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
+            {book.author}: <br /> {book.title}
           </Popup>
         </Marker>
       </MapContainer>
       </div>
       </div>
-      <div className="column is-full">
-        {user._id === book.user ? (
-          <Link to={API_URL + book._id + '/edit'} className="button is-fullwidth is-warning">Szerkeszt</Link>
+      { user && (
+      <div className="column">
+        <div className="field is-grouped">
+          <p className="control">
+            <BackButton />
+          </p>
+          <p className="control">
+            {user._id === book.user ? (
+              <Link to={API_URL + book._id + '/edit'} className="button is-warning">
+                <span className="icon"><FaEdit/></span>
+                  <span>Szerkeszt</span>
+              </Link>
         ) :
-          <button onClick={handleClick} className="button is-fullwidth is-success">Felveszem a kapcsolatot a feltöltővel</button>
+          <button className="button is-success">
+            Felveszem a kapcsolatot a feltöltővel
+          </button>
       }
+          </p>
+        </div>
       </div>
+      ) }
+
       </div>
-        ) : 'Nem találtam a könyvet.'
+            ) : 'Nem találtam a könyvet.'
         }
       </div>
       

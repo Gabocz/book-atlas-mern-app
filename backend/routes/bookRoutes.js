@@ -16,6 +16,6 @@ const {
 router.route('/').post(authenticate, registerBook).get(getAllBooks)
 router.route('/search').get(searchBooks)
 router.route('/user/:id').get(authenticate, getAllBooksByUser).put(authenticate, updateBook).delete(authenticate, deleteBook)
-router.route('/:id').get(getBook)
+router.route('/:id').get(getBook).put(authenticate, updateBook)
 
 module.exports = router

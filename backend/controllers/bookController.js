@@ -118,7 +118,7 @@ const getAllBooksByUser = asyncHandler(async(req, res) => {
 
 
 const searchBooks = asyncHandler(async(req, res) => {
-    const searchTerm = req.query.search
+    const searchTerm = req.query.query
     const newReg = new RegExp(searchTerm, 'i')
     if(!searchTerm) {
         res.status(400)

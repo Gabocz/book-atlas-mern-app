@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
-import { FaUpload } from "react-icons/fa"
+import { FaUpload, FaCheck } from "react-icons/fa"
+import BackButton from '../components/BackButton'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -7,6 +8,15 @@ import { UserContext } from '../context/UserContext'
 
 
 function NewBook() {
+  const [formData, setFormData] = useState({
+      author: '',
+      title: '',
+      location: '',
+      lang: '',
+      imgs: ''
+  })
+  
+  const { author, title, location, lang, imgs } = formData
     
     const {user} = useContext(UserContext)
     
@@ -18,7 +28,7 @@ function NewBook() {
     
     const getGeoLocation = async () => {
       try {
-        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=AIzaSyDxFzfsUyVBikgaGZ-EOgv2QF-ogy0MKOk`)
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`)
         const data = await response.json()
 
         geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
@@ -29,19 +39,8 @@ function NewBook() {
       } catch (e) {
         console.log(e)
       }
-        
-
     }
     
-    const [formData, setFormData] = useState({
-        author: '',
-        title: '',
-        location: '',
-        lang: '',
-        imgs: ''
-    })
-    
-    const { author, title, location, lang, imgs } = formData
     
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -86,11 +85,11 @@ function NewBook() {
     }
 
     return (
-        <>
+        <div className="column">
         <section className="hero has-background-info is-small block">
             <div className='hero-body'>
                <p className='title has-text-light'>
-                   Tölts fel új könyvet
+                   Tölts fel új könyvet!
                 </p> 
             </div>  
         </section>
@@ -175,14 +174,20 @@ function NewBook() {
                 </span>
                 </label>
               </div>
-              <div className="field is-fullwidth mt-5">
+              <div className="field is-grouped mt-3">
                 <div className="control">
-                  <button className="button has-background-info has-text-light is-fullwidth">Feltöltöm</button>
+                  <BackButton/>
+                </div>
+                <div className="control">
+                  <button type="submit" className="button has-background-info has-text-light">
+                    <span className="icon"><FaCheck/></span>
+                      <span>Feltöltöm</span>
+                  </button>
                 </div>
             </div>
             </form>
         </section>
-        </>
+        </div>
     )
 }
 
