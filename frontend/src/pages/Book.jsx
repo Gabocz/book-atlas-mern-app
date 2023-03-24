@@ -1,32 +1,52 @@
 import { useState, useEffect, useContext } from 'react'
+import { UserContext } from '../context/UserContext'
 import { Link, useParams } from 'react-router-dom'
 import { FaEdit } from 'react-icons/fa'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { toast } from 'react-toastify'
 import BackButton from '../components/BackButton'
 import axios from 'axios'
-import { UserContext } from '../context/UserContext'
+import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
 
 function Book() {
     const {user} = useContext(UserContext)
     const [ book, setBook ] = useState(null)
+    const [ bookOwner, setBookOwner ] = useState(null)
     const [ mapCenter, setMapCenter ] = useState({
       lat: 46.2530102, 
       lng: 20.1414253
     })
+    const [isLoading, setIsLoading] = useState(false)
+
     
     const params = useParams()
 
+    const getBookOwner = async (id) => {
+      try {
+        const res = await axios.get(`http://localhost:3000/users/${id}`)
+        if(res.data) {
+          setBookOwner(res.data)
+        }
+      } catch(e) {
+        console.log(e)
+      }
+       
+    }
+
     useEffect(() => {
+        setIsLoading(true)
         const fetchBook = async () => {
           try {
             const res = await axios.get(API_URL + params.id)
             if(res.data) {
                 setBook(res.data)
+                getBookOwner(res.data.user)
                 setMapCenter(res.data.geolocation)
+                setIsLoading(false)
             } else {
-              console.log('Nem találtam a könyvet.')
+              toast.error('Nem találtam a könyvet.')
             }
           } catch (error) {
             console.log(error)
@@ -35,6 +55,11 @@ function Book() {
         fetchBook()
     }, [params.id])
 
+
+
+    if(isLoading) {
+      return <Spinner/>
+    }
    
     return (
 
@@ -91,10 +116,13 @@ function Book() {
                 <span className="icon"><FaEdit/></span>
                   <span>Szerkeszt</span>
               </Link>
-        ) :
-          <button className="button is-success">
+        ) : bookOwner !== null && (
+          <a className="button is-success"
+          href={`mailto: ${bookOwner.email}?Subject=${book.author + ': ' + book.title}`}
+          >
             Felveszem a kapcsolatot a feltöltővel
-          </button>
+          </a>
+        )
       }
           </p>
         </div>

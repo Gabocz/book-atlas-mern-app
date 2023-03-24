@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { UserContext } from '../context/UserContext'
+import Spinner from '../components/Spinner'
 
 
 function NewBook() {
@@ -16,6 +17,9 @@ function NewBook() {
       imgs: ''
   })
   
+  const [isLoading, setIsLoading] = useState(false)
+  
+
   const { author, title, location, lang, imgs } = formData
     
     const {user} = useContext(UserContext)
@@ -51,6 +55,7 @@ function NewBook() {
     
     const onSubmit = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
         await addBook(formData).then(data => {
           if(data) {
             navigate('/')
@@ -58,6 +63,7 @@ function NewBook() {
               position: toast.POSITION.BOTTOM_RIGHT,
               theme: 'dark'
             })
+            setIsLoading(false)
           } else {
             toast.error('Nem sikerült a feltöltés. Próbáld újra.', {
               position: toast.POSITION.BOTTOM_RIGHT,
@@ -82,6 +88,10 @@ function NewBook() {
       
       return response.data
       
+    }
+
+    if(isLoading) {
+      return <Spinner/>
     }
 
     return (

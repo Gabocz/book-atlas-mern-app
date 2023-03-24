@@ -89,13 +89,23 @@ const loginUser = asyncHandler(async(req, res) => {
     })
       
 
-  const getCurrentUser = asyncHandler((req, res) => {
-      const user = {
-        id: req.user._id, 
-        email: req.user.email,
-        name: req.user.name
-      }
-      res.status(200).json(user)
+  // const getCurrentUser = asyncHandler((req, res) => {
+  //     const user = {
+  //       id: req.user._id, 
+  //       email: req.user.email,
+  //       name: req.user.name
+  //     }
+  //     res.status(200).json(user)
+  // })
+
+  const getUser = asyncHandler(async(req, res) =>  {
+    const  { id } = req.params
+    const user = await User.findById(id)
+    if(!user) {
+      res.status(401)
+      throw new Error('Felhasználó nem található.')
+    }
+    res.status(200).json(user)
   })
 
   // generate token
@@ -109,7 +119,8 @@ module.exports = {
     registerUser,
     loginUser,
     updateUser,
-    getCurrentUser,
+    // getCurrentUser,
+    getUser
 }
 
 

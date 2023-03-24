@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { FaUser, FaEnvelope, FaCheck } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
+import Spinner from '../components/Spinner'
 
 
 function Register() {
 
   const {registerUser} = useContext(UserContext)
-
+    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -28,6 +29,7 @@ function Register() {
     }
 
        const onSubmit = async (e) => {
+        setIsLoading(true)
         e.preventDefault()
 
         if(password !== password2) {
@@ -54,6 +56,7 @@ function Register() {
                        password: '',
                        password2: ''
                  })
+                 setIsLoading(false)
                 } else {
                     toast.error('Sikertelen regisztráció. Próbáld újra.', {
                       position: toast.POSITION.BOTTOM_RIGHT,
@@ -63,6 +66,10 @@ function Register() {
               })
             } 
           } 
+
+    if(isLoading) {
+            return <Spinner/>
+      }
     
     return (
         <div className="column">

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
+import Spinner from '../components/Spinner'
 
 
 const API_URL = '/books'
@@ -9,14 +10,17 @@ const API_URL = '/books'
 function Home() {
   const { user } = useContext(UserContext)
   const [ books, setBooks ] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
   
     
   useEffect(() => {
+    setIsLoading(true)
     const fetchBooks = async () => {
       try {
         const res = await axios.get(API_URL)
         if(res.data) {
           setBooks(res.data)
+          setIsLoading(false)
         } else {
           console.log('Nem találtam könyveket.')
         } 
@@ -28,20 +32,24 @@ function Home() {
   fetchBooks()
   }, [])
 
+
+      if(isLoading) {
+        return <Spinner/>
+      }
    
   
         return ( 
-   <div className="columns is-multiline mt-2">  
+      <div className="columns is-multiline mt-2">  
 
-  {books.length > 0  ? books.map(book => 
+        {books.length > 0  ? books.map(book => 
 
-  (
+       (
 
-<div className="column is-one-quarter" key={book._id}>
-      {user ? (
-    <Link to={API_URL + '/' + book._id }>
-      <div className="card">
-        <div className="card-image">
+      <div className="column is-one-quarter" key={book._id}>
+        {user ? (
+      <Link to={API_URL + '/' + book._id }>
+        <div className="card">
+          <div className="card-image">
           <figure className="image is-256x256">
             <img src={book.imgs[0]} alt="book"/>
           </figure>

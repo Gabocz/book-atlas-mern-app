@@ -4,6 +4,7 @@ import { FaUser, FaEnvelope, FaUserEdit, FaSave } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
 import axios from 'axios'
+import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
 
@@ -12,6 +13,7 @@ function Profile() {
     const {user} = useContext(UserContext)
     const { updateUser } = useContext(UserContext)
 
+    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
         name: user.name, 
         email: user.email
@@ -23,6 +25,7 @@ function Profile() {
     const [ usersBooks, setUsersBooks ] = useState([])
 
     useEffect(() => {
+      setIsLoading(true)
       const fetchUsersBooks = async () => {
         try {
           const {token} = JSON.parse(localStorage.getItem('user'))
@@ -34,6 +37,7 @@ function Profile() {
           const res = await axios.get(API_URL +'user/' + user._id, config)
           if(res.data) {
             setUsersBooks(res.data)
+            setIsLoading(false)
           }
         } catch(error) {
           console.log(error)
@@ -52,6 +56,7 @@ function Profile() {
 
 
     const onSubmit = async () => {
+      setIsLoading(true)
         await updateUser(formData).then(data => { 
           if(data) {
             toast.success('Sikeresen módosítottad az adataidat.', {
@@ -59,6 +64,7 @@ function Profile() {
               theme: 'dark'
             })
             setChangeDetails(false)
+            setIsLoading(false)
           } else {
             toast.error('Nem sikerült módosítani az adataid. Próbáld újra.', {
               position: toast.POSITION.BOTTOM_RIGHT,
@@ -67,6 +73,10 @@ function Profile() {
         }
     })
   }
+  if(isLoading) {
+    return <Spinner/>
+  }
+
 
     return (
         <div className="column">

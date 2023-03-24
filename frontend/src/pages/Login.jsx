@@ -44,7 +44,7 @@ function Login() {
                toast.success('Sikeres belépés', {
                position: toast.POSITION.BOTTOM_RIGHT,
                theme: 'dark'
-               })      
+               })     
              } else {
               toast.error('Hibás belépési adatok.', {
                 position: toast.POSITION.BOTTOM_RIGHT,

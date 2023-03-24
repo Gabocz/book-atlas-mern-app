@@ -5,9 +5,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { UserContext } from '../context/UserContext'
+import Spinner from '../components/Spinner'
 
 
 function EditBook() {
+  const [isLoading, setIsLoading] = useState(false)
   const params = useParams()
 
   const API_URL = `/books/${params.id}`
@@ -15,6 +17,7 @@ function EditBook() {
     const [ book, setBook ] = useState(false)
 
     useEffect(() => {
+      setIsLoading(true)
       const fetchBook = async () => {
         try {
           const res = await axios.get(API_URL)
@@ -26,6 +29,7 @@ function EditBook() {
                 location: res.data.location,
                 lang: res.data.lang,
               })
+              setIsLoading(false)
             } else {
             console.log('Nem találtam a könyvet.')
           }
@@ -77,6 +81,7 @@ function EditBook() {
     
     const onSubmit = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
         await updateBook(formData).then(data => {
           if(data) {
             navigate('/')
@@ -84,6 +89,7 @@ function EditBook() {
               position: toast.POSITION.BOTTOM_RIGHT,
               theme: 'dark'
             })
+            setIsLoading(false)
           } else {
             toast.error('Nem sikerült módosítani. Próbáld újra.', {
               position: toast.POSITION.BOTTOM_RIGHT,
@@ -108,6 +114,11 @@ function EditBook() {
       return response.data
       
     }
+
+    if(isLoading) {
+      return <Spinner/>
+    }
+
 
    if(!book) {
     return <p>Nem találtam a könyvet.</p>
