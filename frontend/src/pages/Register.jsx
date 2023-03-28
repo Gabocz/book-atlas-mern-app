@@ -6,10 +6,10 @@ import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 
 
-function Register() {
+function Register({ setIsLoading, isLoading }) {
 
-  const {registerUser} = useContext(UserContext)
-    const [isLoading, setIsLoading] = useState(false)
+  const { registerUser } = useContext(UserContext)
+  
     const [formData, setFormData] = useState({
         name: '',
         email: '',

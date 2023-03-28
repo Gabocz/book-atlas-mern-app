@@ -7,10 +7,10 @@ import Spinner from '../components/Spinner'
 
 const API_URL = '/books'
 
-function Home() {
+function Home({ setIsLoading, isLoading }) {
   const { user } = useContext(UserContext)
   const [ books, setBooks ] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  
   
     
   useEffect(() => {
@@ -30,7 +30,7 @@ function Home() {
         
     }
   fetchBooks()
-  }, [])
+  }, [setIsLoading])
 
 
       if(isLoading) {

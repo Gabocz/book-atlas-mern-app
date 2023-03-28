@@ -8,8 +8,7 @@ import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 
 
-function EditBook() {
-  const [isLoading, setIsLoading] = useState(false)
+function EditBook({isLoading, setIsLoading}) {
   const params = useParams()
 
   const API_URL = `/books/${params.id}`
@@ -38,7 +37,7 @@ function EditBook() {
         }  
       }
       fetchBook()
-  }, [params.id, API_URL])
+  }, [params.id, API_URL, setIsLoading])
 
     const [formData, setFormData] = useState({
         author: book.author,

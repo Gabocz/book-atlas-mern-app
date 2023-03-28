@@ -68,15 +68,20 @@ const loginUser = asyncHandler(async(req, res) => {
     
     if(!name || !email) {
         res.status(400)
-        throw new Error('Töltsd ki az összes kötelező mezőt.')
+        throw new Error('Hiányzó adatok.')
       }
   
     const user = await User.findById(req.user.id)
 
     if(!user) {
-        res.status(401)
-        throw new Error('Felhasználó nem található.')
-      }
+      res.status(401)
+      throw new Error('Felhasználó nem található.')
+    }
+
+    if(user.name === name && user.email === email) {
+       res.status(400)
+       throw new Error('Az adatok nem változtak.')
+    }
 
       if(user._id.toString() !== req.user.id) {
         res.status(401)
@@ -88,15 +93,6 @@ const loginUser = asyncHandler(async(req, res) => {
 
     })
       
-
-  // const getCurrentUser = asyncHandler((req, res) => {
-  //     const user = {
-  //       id: req.user._id, 
-  //       email: req.user.email,
-  //       name: req.user.name
-  //     }
-  //     res.status(200).json(user)
-  // })
 
   const getUser = asyncHandler(async(req, res) =>  {
     const  { id } = req.params

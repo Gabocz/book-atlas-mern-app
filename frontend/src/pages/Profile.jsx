@@ -8,12 +8,11 @@ import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
 
-function Profile() {
+function Profile({ setIsLoading, isLoading }) {
 
     const {user} = useContext(UserContext)
     const { updateUser } = useContext(UserContext)
 
-    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
         name: user.name, 
         email: user.email
@@ -69,7 +68,8 @@ function Profile() {
             toast.error('Nem sikerült módosítani az adataid. Próbáld újra.', {
               position: toast.POSITION.BOTTOM_RIGHT,
               theme: 'dark'
-          })
+            })
+            setIsLoading(false)
         }
     })
   }

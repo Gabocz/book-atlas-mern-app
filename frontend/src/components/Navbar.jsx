@@ -63,7 +63,7 @@ function Navbar({setFoundBooks}) {
           <div className="navbar-brand">
             <Link className="navbar-item has-text-weight-bold is-size-4" to="/">
               <span className="icon is-small mr-1"><FaBookOpen/></span> 
-              <span>SimpleBook</span>
+              <span>QuantumBook</span>
             </Link>
 
     <Link onClick={() => setIsActive(!isActive)} role="button" className={isActive ? "navbar-burger is-active" : "navbar-burger"} aria-label="menu" aria-expanded="false" data-target="navbar">

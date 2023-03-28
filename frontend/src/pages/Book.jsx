@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../context/UserContext'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { FaEdit } from 'react-icons/fa'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { toast } from 'react-toastify'
@@ -10,7 +10,7 @@ import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
 
-function Book() {
+function Book({isLoading, setIsLoading}) {
     const {user} = useContext(UserContext)
     const [ book, setBook ] = useState(null)
     const [ bookOwner, setBookOwner ] = useState(null)
@@ -18,9 +18,8 @@ function Book() {
       lat: 46.2530102, 
       lng: 20.1414253
     })
-    const [isLoading, setIsLoading] = useState(false)
 
-    
+    const navigate = useNavigate()
     const params = useParams()
 
     const getBookOwner = async (id) => {
@@ -53,7 +52,26 @@ function Book() {
           }  
         }
         fetchBook()
-    }, [params.id])
+    }, [params.id, setIsLoading])
+
+
+  const deleteBook = async () => {
+      setIsLoading(true)
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        }
+      }
+      if(window.confirm('Biztosan törölni szeretnéd ezt a könyvet?')) {
+        await axios.delete(API_URL + params.id, config)
+      }
+      toast.success('Sikeres törlés.', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        theme: 'dark'
+      })
+      setIsLoading(false)
+      navigate('/')
+    }
 
 
 
@@ -124,6 +142,11 @@ function Book() {
           </a>
         )
       }
+          </p>
+          <p className="control">
+            <button onClick={deleteBook} className="button is-outlined is-danger">
+              Törlés
+            </button>
           </p>
         </div>
       </div>

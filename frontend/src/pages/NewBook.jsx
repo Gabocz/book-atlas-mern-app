@@ -8,7 +8,7 @@ import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 
 
-function NewBook() {
+function NewBook({ setIsLoading, isLoading }) {
   const [formData, setFormData] = useState({
       author: '',
       title: '',
@@ -16,9 +16,6 @@ function NewBook() {
       lang: '',
       imgs: ''
   })
-  
-  const [isLoading, setIsLoading] = useState(false)
-  
 
   const { author, title, location, lang, imgs } = formData
     
