@@ -1,10 +1,11 @@
 const asyncHandler = require('express-async-handler')
-
 const Book = require('../models/bookModel')
 const User = require('../models/userModel')
 
-const registerBook = asyncHandler(async(req, res) => {
-  const { title, author, location, lang, coords }  = req.body
+
+const registerBook = asyncHandler(async (req, res) => {
+    const { title, author, location, lang, coords } = req.body
+
   
   if(!title || !author|| !location) {
       res.status(400)
@@ -23,8 +24,10 @@ const registerBook = asyncHandler(async(req, res) => {
         author, 
         location, 
         lang, 
-        geolocation: coords, 
+        images: req.files.map(f => ({url: f.path, filename: f.filename})),
+        geolocation: JSON.parse(coords), 
         user: req.user.id
+        
     })
     res.status(201).json(book)
 })

@@ -9,15 +9,13 @@ import Spinner from '../components/Spinner'
 
 
 function NewBook({ setIsLoading, isLoading }) {
-  const [formData, setFormData] = useState({
-      author: '',
-      title: '',
-      location: '',
-      lang: '',
-      imgs: ''
-  })
+  
+  const [fileList, setFileList] = useState(null)
+  const [author, setAuthor] = useState('')
+  const [title, setTitle] = useState('')
+  const [location, setLocation] = useState('')
+  const [lang, setLang] = useState('')
 
-  const { author, title, location, lang, imgs } = formData
     
     const {user} = useContext(UserContext)
     
@@ -43,17 +41,10 @@ function NewBook({ setIsLoading, isLoading }) {
     }
     
     
-    const onChange = (e) => {
-        setFormData((prevState) => ({
-            ...prevState, 
-            [e.target.name] : e.target.value
-        }))
-    }
-    
     const onSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
-        await addBook(formData).then(data => {
+        await addBook().then(data => {
           if(data) {
             navigate('/')
             toast.success('Sikeres feltöltés', {
@@ -73,19 +64,32 @@ function NewBook({ setIsLoading, isLoading }) {
     }
 
     
-    const addBook = async(bookData) => {
+  const addBook = async () => {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`
+            Authorization: `Bearer ${user.token}`
         }
-      }
-      const coords = await getGeoLocation()
-      const newBook = {coords, ...bookData}
-      const response = await axios.post(API_URL, newBook, config)
-      
-      return response.data
-      
     }
+
+    const coords = await getGeoLocation()
+    
+    const bookData = new FormData()
+    files.forEach((file, i) => {
+      bookData.append("image", file, file.name);
+    })
+    bookData.append("author", author)
+    bookData.append("title", title)
+    bookData.append("location", location)
+    bookData.append("lang", lang) 
+    bookData.append("coords", JSON.stringify(coords))
+      
+    const response = await axios.post(API_URL, bookData, config)
+    
+    return response.data
+      
+  }
+  
+  const files = fileList ? [...fileList] : [];
 
     if(isLoading) {
       return <Spinner/>
@@ -101,12 +105,12 @@ function NewBook({ setIsLoading, isLoading }) {
             </div>  
         </section>
         <section className="form">
-            <form onSubmit={onSubmit} encType='mulmultipart/form-data'>
+            <form onSubmit={onSubmit} encType='multipart/form-data'>
               <div className="field">
                 <label id="author" className="label">Szerző</label>
                 <div className="control">
                   <input 
-                    onChange={onChange}
+                    onChange={(e) => setAuthor(e.target.value)}
                     id="author"
                     name="author"
                     value={author}
@@ -121,7 +125,7 @@ function NewBook({ setIsLoading, isLoading }) {
                 <label id="title" className="label">Cím</label>
                 <div className="control">
                   <input 
-                    onChange={onChange}
+                    onChange={(e) => setTitle(e.target.value)}
                     id="title"
                     name="title"
                     value={title}
@@ -136,7 +140,7 @@ function NewBook({ setIsLoading, isLoading }) {
                 <label id="lang" className="label">Nyelv</label>
                 <div className="control">
                   <input 
-                    onChange={onChange}
+                    onChange={(e) => setLang(e.target.value)}
                     id="lang"
                     name="lang"
                     value={lang}
@@ -150,7 +154,7 @@ function NewBook({ setIsLoading, isLoading }) {
                 <label id="location" className="label">Város, utca, házszám</label>
                 <div className="control">
                   <input 
-                    onChange={onChange}
+                    onChange={(e) => setLocation(e.target.value)}
                     id="location"
                     name="location"
                     value={location}
@@ -161,15 +165,15 @@ function NewBook({ setIsLoading, isLoading }) {
                   />
                 </div>
               </div>
-              <div className="file is-info">
-                <label id="imgs" className="file-label">
+              <div className="file has-name is-info">
+                <label id="image" className="file-label">
                 <input
-                  onChange={onChange}
-                  id="imgs"
-                  name="imgs"
-                  value={imgs}
+                  onChange={(e) =>setFileList(e.target.files)}
+                  id="image"
+                  name="image"
                   className="file-input" 
-                  type="file" 
+                  type="file"
+                  multiple
                 />
                 <span className="file-cta">
                     <span className="file-icon">
@@ -179,6 +183,9 @@ function NewBook({ setIsLoading, isLoading }) {
                       Képet töltök fel
                     </span>
                 </span>
+                {/* <span className="file-name">
+                  {files[0] ? files[0].name : ''}
+               </span> */}
                 </label>
               </div>
               <div className="field is-grouped mt-3">

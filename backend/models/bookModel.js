@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+const ImageSchema = new mongoose.Schema({
+    url: String, 
+    filename: String
+})
+
 const bookSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,10 +27,8 @@ const bookSchema = mongoose.Schema({
         type: String,
         default: 'magyar'
     }, 
-    imgs: {
-        type: Array, 
-        default: ['https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80']
-    }, 
+    images: [ImageSchema],
+    
     geolocation: {
         lat: Number,
         lng: Number

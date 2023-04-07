@@ -1,7 +1,7 @@
 function Footer() {
     return (
-        <footer class="footer">
-          <div class="content">
+        <footer className="footer">
+          <div className="content">
             <p>
                QuantumBook &copy; 2023 by <strong>Gabocz</strong>.
             </p>

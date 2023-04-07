@@ -1,5 +1,6 @@
 const express = require('express')
 const dotenv = require('dotenv').config()
+const path = require('path')
 const PORT = process.env.PORT || 8000
 const { errorHandler } = require('./middleware/ErrorMiddleware')
 const connectDB = require('./dbConfig')
@@ -11,6 +12,7 @@ const app = express()
 
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: false }))
+app.use('/uploads', express.static('uploads'))
 
 
 app.get('/', (req, res) => {

@@ -51,7 +51,7 @@ function Home({ setIsLoading, isLoading }) {
         <div className="card">
           <div className="card-image">
           <figure className="image is-256x256">
-            <img src={book.imgs[0]} alt="book"/>
+            <img src={book.images[0].url} alt="book"/>
           </figure>
         </div>
         <div className="card-content">
@@ -71,7 +71,7 @@ function Home({ setIsLoading, isLoading }) {
       <div className="card">
         <div className="card-image">
           <figure className="image is-256x256">
-            <img src={book.imgs[0]} alt="book"/>
+            <img src={book.images[0].url} alt="book"/>
           </figure>
         </div>
         <div className="card-content">
