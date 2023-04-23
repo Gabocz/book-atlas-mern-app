@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Book = require('../models/bookModel')
 const User = require('../models/userModel')
 
-
+ 
 const registerBook = asyncHandler(async (req, res) => {
     const { title, author, location, lang, coords } = req.body
 
@@ -13,7 +13,7 @@ const registerBook = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findById(req.user.id)
-
+    
     if(!user) {
         res.status(404)
         throw new Error('Felhasználó nem található.')
@@ -24,7 +24,8 @@ const registerBook = asyncHandler(async (req, res) => {
         author, 
         location, 
         lang, 
-        images: req.files.map(f => ({url: f.path, filename: f.filename})),
+        images: req.files.length ? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
+        : {url: undefined, filename: undefined},
         geolocation: JSON.parse(coords), 
         user: req.user.id
         
@@ -85,13 +86,24 @@ const updateBook = asyncHandler(async (req, res) => {
  })
  
 
-const getAllBooks = asyncHandler(async(req, res) => {
+const getBooks = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 8 } = req.query
     const books = await Book.find()
-    if(!books) {
-        res.status(404)
-        throw new Error('Nem találtunk könyveket.')
-    } else {
-        res.status(200).json(books)
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .sort({ createdAt: -1})
+        .exec()
+            
+        if(!books) {
+            res.status(404)
+            throw new Error('Nem találtunk könyveket.')
+        } else {
+        const count = await Book.countDocuments()
+            res.status(200).json({
+                books,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page
+            })
     }
 })
 
@@ -139,7 +151,7 @@ const searchBooks = asyncHandler(async(req, res) => {
 
 module.exports = {
     registerBook,
-    getAllBooks,
+    getBooks,
     getBook,
     getAllBooksByUser,
     searchBooks,

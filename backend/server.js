@@ -1,6 +1,6 @@
 const express = require('express')
 const dotenv = require('dotenv').config()
-const path = require('path')
+const cors = require('cors')
 const PORT = process.env.PORT || 8000
 const { errorHandler } = require('./middleware/ErrorMiddleware')
 const connectDB = require('./dbConfig')
@@ -10,9 +10,10 @@ const connectDB = require('./dbConfig')
 connectDB()
 const app = express()
 
+app.use(cors())
 app.use(express.json()) 
-app.use(express.urlencoded({ extended: false }))
-app.use('/uploads', express.static('uploads'))
+app.use(express.urlencoded({ extended: true }))
+// app.use('/uploads', express.static('uploads'))
 
 
 app.get('/', (req, res) => {

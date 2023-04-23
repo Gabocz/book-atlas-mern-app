@@ -2,24 +2,30 @@ const express = require('express')
 const router = express.Router()
 const { authenticate } = require('../middleware/Auth')
 const multer = require('multer')
-const path = require('path')
+const { sendUploadToGCS } = require('../middleware/upload')
+// const path = require('path')
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
-  }
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads/')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+//   }
+// })
+
+const storage = multer.memoryStorage()
+const upload = multer({
+    storage: storage,
+    limits: 1024 * 1024
 })
 
-const upload = multer({ storage: storage });
-const { sendUploadToGCS } = require('../middleware/upload')
+
 
 
 const {
     registerBook, 
-    getAllBooks, 
+    getBooks, 
     getAllBooksByUser, 
     searchBooks, 
     updateBook,
@@ -29,7 +35,7 @@ const {
 
 
 
-router.route('/').post(authenticate, upload.array("image"), registerBook).get(getAllBooks)
+router.route('/').post(authenticate, upload.array('image', 3), sendUploadToGCS, registerBook).get(getBooks)
 router.route('/search').get(searchBooks)
 router.route('/user/:id').get(authenticate, getAllBooksByUser).put(authenticate, updateBook)
 router.route('/:id').get(getBook).put(authenticate, updateBook).delete(authenticate, deleteBook)

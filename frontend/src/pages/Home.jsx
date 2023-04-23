@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
+import Pagination from '../components/Pagination'
 import Spinner from '../components/Spinner'
 
 
@@ -9,28 +10,34 @@ const API_URL = '/books'
 
 function Home({ setIsLoading, isLoading }) {
   const { user } = useContext(UserContext)
-  const [ books, setBooks ] = useState([])
-  
-  
+  const [books, setBooks] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
+
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+    
     
   useEffect(() => {
     setIsLoading(true)
     const fetchBooks = async () => {
       try {
-        const res = await axios.get(API_URL)
-        if(res.data) {
-          setBooks(res.data)
+        const res = await axios.get(API_URL + "?page=" + currentPage)
+        if(res.data.books) {
+          setBooks(res.data.books)
+          setTotalPages(res.data.totalPages)
           setIsLoading(false)
         } else {
           console.log('Nem találtam könyveket.')
         } 
       } catch (error) {
-         console.log(error)
+        console.log(error)
+        setIsLoading(false)
       }
         
     }
   fetchBooks()
-  }, [setIsLoading])
+  }, [setIsLoading, currentPage])
 
 
       if(isLoading) {
@@ -38,7 +45,8 @@ function Home({ setIsLoading, isLoading }) {
       }
    
   
-        return ( 
+  return (
+      <>
       <div className="columns is-multiline mt-2">  
 
         {books.length > 0  ? books.map(book => 
@@ -87,12 +95,14 @@ function Home({ setIsLoading, isLoading }) {
           </div>
         </div>
       )}
-</div>
+    </div>   
   )) 
     : 'Nem találtam könyveket.'
 
-}
+  }       
   </div> 
+      <Pagination totalPages={totalPages} paginate={paginate} />
+      </>
 ) 
 
   }

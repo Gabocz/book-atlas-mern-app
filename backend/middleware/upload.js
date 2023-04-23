@@ -1,10 +1,11 @@
-const { Storage } = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage')
 
-const CLOUD_BUCKET = process.env.CLOUD_BUCKET;
+const CLOUD_BUCKET = process.env.CLOUD_BUCKET
 const storage = new Storage({
   projectId: process.env.GCLOUD_PROJECT_ID,
   keyFilename: process.env.KEYFILE_PATH
 })
+
 const bucket = storage.bucket(CLOUD_BUCKET)
 
 const getPublicUrl = (filename) => {
@@ -12,15 +13,16 @@ const getPublicUrl = (filename) => {
 }
 
 const sendUploadToGCS = (req, res, next) => {
-
   if (!req.files) {
     return next()
   }
 
   let promises = [];
   req.files.forEach((image, index) => {
-    const gcsname = req.headers.decode.username + Date.now() + image.originalname
+    const gcsname = Date.now() + image.originalname
+    
     const file = bucket.file(gcsname)
+    
 
     const promise = new Promise((resolve, reject) => {
       const stream = file.createWriteStream({
@@ -32,7 +34,6 @@ const sendUploadToGCS = (req, res, next) => {
       stream.on('finish', async () => {
         try {
           req.files[index].cloudStorageObject = gcsname
-          await file.makePublic()
           req.files[index].cloudStoragePublicUrl = getPublicUrl(gcsname)
           resolve();
         } catch (error) {
@@ -43,6 +44,7 @@ const sendUploadToGCS = (req, res, next) => {
       stream.on('error', (err) => {
         req.files[index].cloudStorageError = err
         reject(err)
+        console.log(err)
       });
 
       stream.end(image.buffer);
@@ -60,5 +62,5 @@ const sendUploadToGCS = (req, res, next) => {
 }
 
 module.exports = {
-  sendUploadToGCS
+  sendUploadToGCS,
 }

@@ -11,39 +11,56 @@ import Spinner from '../components/Spinner'
 function NewBook({ setIsLoading, isLoading }) {
   
   const [fileList, setFileList] = useState(null)
+  const [canSubmit, setCanSubmit] = useState(true)
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
   const [location, setLocation] = useState('')
   const [lang, setLang] = useState('')
+ 
+  const files = fileList ? [...fileList] : [];
 
+
+
+  const {user} = useContext(UserContext)
     
-    const {user} = useContext(UserContext)
+  const navigate = useNavigate()
     
-    const navigate = useNavigate()
-    
-    const API_URL = '/books/'
+  const API_URL = '/books/'
+  
+  let geolocation = {}
 
-    let geolocation = {}
-    
-    const getGeoLocation = async () => {
-      try {
-        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`)
-        const data = await response.json()
-
-        geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
-        geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
-
-        return geolocation
-
-      } catch (e) {
-        console.log(e)
-      }
+  const handleChange = (e) => {
+    if (e.target.files.length > 3 ) {
+      setCanSubmit(false)
+      return toast.error('Legfeljebb 3 képet tölthetsz fel.', {
+        position: toast.POSITION.BOTTOM_RIGHT, 
+        theme: 'dark'
+      })
+    } else {
+      setCanSubmit(true)
+      setFileList(e.target.files)
     }
+  }
+  
     
-    
+  const getGeoLocation = async () => {
+    try {
+      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`)
+      const data = await response.json()
+      
+      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
+      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
+      
+      return geolocation
+      
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  
     const onSubmit = async (e) => {
-        e.preventDefault()
-        setIsLoading(true)
+      e.preventDefault()
+       setIsLoading(true)
         await addBook().then(data => {
           if(data) {
             navigate('/')
@@ -59,7 +76,6 @@ function NewBook({ setIsLoading, isLoading }) {
             })
           }
         }
-
         )  
     }
 
@@ -74,6 +90,7 @@ function NewBook({ setIsLoading, isLoading }) {
     const coords = await getGeoLocation()
     
     const bookData = new FormData()
+   
     files.forEach((file, i) => {
       bookData.append("image", file, file.name);
     })
@@ -89,7 +106,6 @@ function NewBook({ setIsLoading, isLoading }) {
       
   }
   
-  const files = fileList ? [...fileList] : [];
 
     if(isLoading) {
       return <Spinner/>
@@ -168,7 +184,7 @@ function NewBook({ setIsLoading, isLoading }) {
               <div className="file has-name is-info">
                 <label id="image" className="file-label">
                 <input
-                  onChange={(e) =>setFileList(e.target.files)}
+                  onChange={handleChange}
                   id="image"
                   name="image"
                   className="file-input" 
@@ -193,7 +209,7 @@ function NewBook({ setIsLoading, isLoading }) {
                   <BackButton/>
                 </div>
                 <div className="control">
-                  <button type="submit" className="button has-background-info has-text-light">
+                <button type="submit" className="button has-background-info has-text-light" disabled={!canSubmit}>
                     <span className="icon"><FaCheck/></span>
                       <span>Feltöltöm</span>
                   </button>

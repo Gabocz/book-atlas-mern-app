@@ -88,7 +88,7 @@ function Book({isLoading, setIsLoading}) {
           <div className="card">
       <div className="card-image">
         <figure className="image is-256x256">
-          <img src={`http://localhost:3000/${book.images[0].url}`} alt="book"/>
+          <img src={book.images[0].url} alt="book"/>
         </figure>
       </div>
       <div className="card-content">
@@ -134,6 +134,7 @@ function Book({isLoading, setIsLoading}) {
                 <span className="icon"><FaEdit/></span>
                   <span>Szerkeszt</span>
               </Link>
+              
         ) : bookOwner !== null && (
           <a className="button is-success"
           href={`mailto: ${bookOwner.email}?Subject=${book.author + ': ' + book.title}`}
@@ -142,12 +143,14 @@ function Book({isLoading, setIsLoading}) {
           </a>
         )
       }
-          </p>
+        </p>
+          {user._id === book.user && (        
           <p className="control">
             <button onClick={deleteBook} className="button is-outlined is-danger">
               Törlés
             </button>
           </p>
+          )}
         </div>
       </div>
       ) }

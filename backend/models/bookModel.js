@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
-    url: String, 
-    filename: String
+    url: {
+        type: String,
+        default: 'https://storage.googleapis.com/simple-book-images/default.jpg'
+    }, 
+    filename: {
+        type: String,
+        default: 'default'
+    }
 })
 
 const bookSchema = mongoose.Schema({
@@ -28,7 +34,7 @@ const bookSchema = mongoose.Schema({
         default: 'magyar'
     }, 
     images: [ImageSchema],
-    
+            
     geolocation: {
         lat: Number,
         lng: Number
