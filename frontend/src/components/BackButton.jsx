@@ -6,7 +6,7 @@ function BackButton({url}) {
     const navigate = useNavigate()
 
     return (
-        <Link onClick={() => navigate(-1)} className="button is-info is-outlined">
+        <Link onClick={() => navigate(-1)} className="button is-info is-outlined is-responsive">
             <span className="icon"><FaReply/></span> 
             <span>Vissza</span>
         </Link>

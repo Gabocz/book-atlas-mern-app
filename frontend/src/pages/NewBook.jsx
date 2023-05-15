@@ -81,7 +81,7 @@ function NewBook({ setIsLoading, isLoading }) {
 
     
   const addBook = async () => {
-      const config = {
+    const config = {
         headers: {
             Authorization: `Bearer ${user.token}`
         }
@@ -94,16 +94,16 @@ function NewBook({ setIsLoading, isLoading }) {
     files.forEach((file, i) => {
       bookData.append("image", file, file.name);
     })
-    bookData.append("author", author)
-    bookData.append("title", title)
-    bookData.append("location", location)
-    bookData.append("lang", lang) 
-    bookData.append("coords", JSON.stringify(coords))
+      bookData.append("author", author)
+      bookData.append("title", title)
+      bookData.append("location", location)
+      bookData.append("lang", lang) 
+      bookData.append("coords", JSON.stringify(coords))
       
     const response = await axios.post(API_URL, bookData, config)
     
-    return response.data
-      
+    return response.data 
+
   }
   
 
@@ -112,14 +112,12 @@ function NewBook({ setIsLoading, isLoading }) {
     }
 
     return (
-        <div className="column">
-        <section className="hero has-background-info is-small block">
-            <div className='hero-body'>
-               <p className='title has-text-light'>
+      <div className="column">
+        <header className="block px-2 py-2">
+          <h1 className="title">
                    Tölts fel új könyvet!
-                </p> 
-            </div>  
-        </section>
+          </h1>   
+        </header>
         <section className="form">
             <form onSubmit={onSubmit} encType='multipart/form-data'>
               <div className="field">
@@ -181,43 +179,47 @@ function NewBook({ setIsLoading, isLoading }) {
                   />
                 </div>
               </div>
-              <div className="file has-name is-info">
+              <div className="file has-name">
                 <label id="image" className="file-label">
-                <input
-                  onChange={handleChange}
-                  id="image"
-                  name="image"
-                  className="file-input" 
-                  type="file"
-                  multiple
-                />
-                <span className="file-cta">
+                  <input
+                    onChange={handleChange}
+                    id="image"
+                    name="image"
+                    className="file-input" 
+                    type="file"
+                    multiple
+                  />
+                  <span className="file-cta">
                     <span className="file-icon">
-                    <FaUpload/>
+                      <FaUpload/>
                     </span>
                     <span className="file-label">
                       Képet töltök fel
                     </span>
-                </span>
-                {/* <span className="file-name">
-                  {files[0] ? files[0].name : ''}
-               </span> */}
+                  </span>
+                  <span className="file-name">
+              {fileList && fileList.length ? fileList.length : 0} fájl kiválasztva
+                  </span>
                 </label>
               </div>
-              <div className="field is-grouped mt-3">
+              <div className="field is-grouped mt-4">
                 <div className="control">
                   <BackButton/>
                 </div>
                 <div className="control">
-                <button type="submit" className="button has-background-info has-text-light" disabled={!canSubmit}>
-                    <span className="icon"><FaCheck/></span>
-                      <span>Feltöltöm</span>
-                  </button>
+                  <button type="submit" className="button is-primary is-outlined is-responsive" disabled={!canSubmit}>
+                    <span className="icon">
+                      <FaCheck/>
+                    </span>
+                    <span>
+                      Feltöltöm
+                    </span>
+                   </button>
                 </div>
-            </div>
+              </div>
             </form>
         </section>
-        </div>
+      </div>
     )
 }
 
