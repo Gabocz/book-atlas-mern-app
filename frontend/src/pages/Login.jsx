@@ -64,15 +64,12 @@ function Login() {
       
     return (
         <div className="column">
-        <section className="hero has-background-grey is-small block">
-            <div className='hero-body'>
-               <p className='title has-text-light'>
-                <span className="icon"><FaSignInAlt/></span> 
-                 <span> Belépés</span>
-                </p>
-            </div>
-            
-        </section>
+         <header className="block px-2 py-2">
+          <h1 className="title is-3">
+            <i className='mr-2'><FaSignInAlt/></i>
+            Belépés
+          </h1>   
+        </header>
         <section className='form'>
           <form onSubmit={onSubmit}>
             <div className="field">
@@ -111,7 +108,7 @@ function Login() {
             </div>
             <div className="field is-fullwidth mt-5">
                 <div className="control">
-                  <button className="button has-background-grey has-text-light">
+                  <button className="button is-outlined is-link">
                     <span className="icon"><FaSignInAlt/></span>
                     <span>Belépek</span>
                     </button>

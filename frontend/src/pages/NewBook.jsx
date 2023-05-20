@@ -19,8 +19,6 @@ function NewBook({ setIsLoading, isLoading }) {
  
   const files = fileList ? [...fileList] : [];
 
-
-
   const {user} = useContext(UserContext)
     
   const navigate = useNavigate()
@@ -106,15 +104,14 @@ function NewBook({ setIsLoading, isLoading }) {
 
   }
   
-
-    if(isLoading) {
+   if(isLoading) {
       return <Spinner/>
     }
 
     return (
       <div className="column">
         <header className="block px-2 py-2">
-          <h1 className="title">
+          <h1 className="title is-3">
                    Tölts fel új könyvet!
           </h1>   
         </header>
@@ -198,7 +195,7 @@ function NewBook({ setIsLoading, isLoading }) {
                     </span>
                   </span>
                   <span className="file-name">
-              {fileList && fileList.length ? fileList.length : 0} fájl kiválasztva
+                    {fileList && fileList.length ? fileList.length : 0} fájl kiválasztva
                   </span>
                 </label>
               </div>

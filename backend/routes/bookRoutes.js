@@ -20,9 +20,6 @@ const upload = multer({
     limits: 1024 * 1024
 })
 
-
-
-
 const {
     registerBook, 
     getBooks, 

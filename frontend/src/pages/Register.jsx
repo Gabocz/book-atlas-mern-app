@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaUser, FaEnvelope, FaCheck } from 'react-icons/fa'
+import { FaUser, FaRegUser, FaEnvelope, FaCheck } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
@@ -73,13 +73,12 @@ function Register({ setIsLoading, isLoading }) {
     
     return (
         <div className="column">
-        <section className="hero has-background-primary is-small block">
-            <div className='hero-body'>
-               <p className='title has-text-light'>
-                <FaUser/> Regisztráció
-                </p> 
-            </div>  
-        </section>
+        <header className="block px-2 py-2">
+          <h1 className="title is-3">
+            <i className='mr-2'><FaRegUser/></i>
+            Regisztráció
+          </h1>   
+        </header>
         <section className='form'>
           <form onSubmit={onSubmit}>
             <div className="field">
@@ -152,7 +151,7 @@ function Register({ setIsLoading, isLoading }) {
             </div>
             <div className="field is-fullwidth mt-5">
                 <div className="control">
-                  <button className="button has-background-primary has-text-light">
+                  <button className="button is-outlined is-link">
                     <span className="icon"><FaCheck/></span>
                     <span>Regisztrálok</span>
                   </button>

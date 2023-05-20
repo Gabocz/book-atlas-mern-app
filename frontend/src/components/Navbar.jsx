@@ -129,8 +129,8 @@ function Navbar({setFoundBooks}) {
     <div className="navbar-end">
       <div className="navbar-item">
         <div className="buttons">
-          <Link to='/register' className="button has-background-danger has-text-light">
-            <strong>Regisztráció</strong>
+          <Link to='/register' className="button is-outlined is-dark">
+            <span>Regisztráció</span>
           </Link>
           <Link to='/login' className="button is-light">
             Bejelentkezés
