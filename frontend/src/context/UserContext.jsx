@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import axios from 'axios'
 
 const API_URL = '/users/'
@@ -50,7 +50,6 @@ const UserContextProvider = ({ children }) => {
         loggedInUser.name = response.data.name
         localStorage.setItem('user', JSON.stringify(loggedInUser))
         setUser(loggedInUser)
-
       }
   
      return response.data
@@ -59,7 +58,6 @@ const UserContextProvider = ({ children }) => {
     console.log(error)
   }
   }
-  
   
   const login = async (userData) => {
     try {
@@ -77,22 +75,18 @@ const UserContextProvider = ({ children }) => {
     }
   }
 
-
-  
   const logout = async () => {
     localStorage.removeItem('user')
     setUser(null)
   }
-       
-
-        
-    const contextValue = useMemo(() => ({
+            
+  const contextValue = {
       user,
       registerUser,
       updateUser,
       login, 
       logout
-    }), [user, registerUser, login, logout, updateUser])
+    }
 
 
     return (
@@ -102,4 +96,4 @@ const UserContextProvider = ({ children }) => {
     )
   }
   
-  export { UserContext, UserContextProvider};
+  export { UserContext, UserContextProvider };

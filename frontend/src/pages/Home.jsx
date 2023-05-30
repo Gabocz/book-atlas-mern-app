@@ -1,9 +1,9 @@
-import axios from 'axios'
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 import Pagination from '../components/Pagination'
 import Spinner from '../components/Spinner'
+import { fetchBooks } from '../helpers/book'
 
 
 const API_URL = '/books'
@@ -19,25 +19,15 @@ function Home({ setIsLoading, isLoading }) {
     
     
   useEffect(() => {
-    setIsLoading(true)
-    const fetchBooks = async () => {
-      try {
-        const res = await axios.get(API_URL + "?page=" + currentPage)
-        if(res.data.books) {
-          setBooks(res.data.books)
-          setTotalPages(res.data.totalPages)
-          setIsLoading(false)
-        } else {
-          console.log('Nem találtam könyveket.')
-        } 
-      } catch (error) {
-        console.log(error)
+    (async () => {
+        setIsLoading(true)
+        const data = await fetchBooks(API_URL + "?page=" + currentPage)
+        const { books, totalPages } = data
+        setBooks(books)
+        setTotalPages(totalPages)
         setIsLoading(false)
-      }
-        
-    }
-  fetchBooks()
-  }, [setIsLoading, currentPage])
+      })()
+    }, [setIsLoading, currentPage])
 
 
       if(isLoading) {

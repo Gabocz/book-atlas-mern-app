@@ -5,19 +5,18 @@ import { FaEdit, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { toast } from 'react-toastify'
 import BackButton from '../components/BackButton'
-import axios from 'axios'
+import { fetchBook, getBookOwner, deleteBook } from '../helpers/book'
 import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
 
 function Book({isLoading, setIsLoading}) {
     const {user} = useContext(UserContext)
+    const { token } = user
     const [ book, setBook ] = useState(null)
-    const [images, setImages] = useState([])
-    const [currentImgIdx, setCurrentImgIdx] = useState(0)
+    const [ images, setImages ] = useState([])
+    const [ currentImgIdx, setCurrentImgIdx ] = useState(0)
     const [ bookOwner, setBookOwner ] = useState(null)
-
-
     const [ mapCenter, setMapCenter ] = useState({
       lat: 46.2530102, 
       lng: 20.1414253
@@ -25,59 +24,44 @@ function Book({isLoading, setIsLoading}) {
 
     const navigate = useNavigate()
     const params = useParams()
-
-    const getBookOwner = async (id) => {
-      try {
-        const res = await axios.get(`http://localhost:3000/users/${id}`)
-        if(res.data) {
-          setBookOwner(res.data)
-        }
-      } catch(e) {
-        console.log(e)
-      }
-       
-    }
-
+    
     useEffect(() => {
-        setIsLoading(true)
-        const fetchBook = async () => {
-          try {
-            const res = await axios.get(API_URL + params.id)
-            if(res.data) {
-                setBook(res.data)
-                setImages(res.data.images)
-                getBookOwner(res.data.user)
-                setMapCenter(res.data.geolocation)
-                setIsLoading(false)
-            } else {
-              toast.error('Nem találtam a könyvet.')
-            }
-          } catch (error) {
-            console.log(error)
-          }  
-        }
-        fetchBook()
-    }, [params.id, setIsLoading])
-
-  
-
-  const deleteBook = async () => {
+          (async () => {
+            setIsLoading(true)
+            const book = await fetchBook(API_URL + params.id)
+            if(book) {
+              const { images, user, geolocation } = book
+              setBook(book)
+              setImages(images)
+              const owner =  await getBookOwner(user)
+              setBookOwner(owner)
+              setMapCenter(geolocation)
+              setIsLoading(false)
+            } 
+          })()
+        }, [params.id, setIsLoading]) 
+        
+       
+    const handleDelete = async () => {
       setIsLoading(true)
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`
-        }
-      }
       if(window.confirm('Biztosan törölni szeretnéd ezt a könyvet?')) {
-        await axios.delete(API_URL + params.id, config)
+        await deleteBook(API_URL + params.id, token)
+        toast.success('Sikeres törlés.', {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark'
+        })
+        setIsLoading(false)
+        navigate(`/users/${user.id}`)
+        } else {
+          toast.error('Nem sikerült törölni.', {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            theme: 'dark'
+          })
+        setIsLoading(false)
+        navigate(`/users/${user.id}`)
       }
-      toast.success('Sikeres törlés.', {
-        position: toast.POSITION.BOTTOM_RIGHT,
-        theme: 'dark'
-      })
-      setIsLoading(false)
-      navigate('/')
     }
+    
 
     const handleLeftClick = () => {
       if(currentImgIdx > 0) {
@@ -87,14 +71,12 @@ function Book({isLoading, setIsLoading}) {
         }
       }
      
-
     const handleRightClick = () => {
       if(currentImgIdx >= images.length - 1 ) {
         return
         }
         setCurrentImgIdx(currentImgIdx + 1)
       }
-
 
     if(isLoading) {
       return <Spinner/>
@@ -164,7 +146,7 @@ function Book({isLoading, setIsLoading}) {
                     </Marker>
               </MapContainer>
             </div>
-      { user && (
+            { user && (
             <div className="column">
               <div className="field is-grouped">
                 <p className="control">
@@ -177,18 +159,18 @@ function Book({isLoading, setIsLoading}) {
                         <span>Szerkeszt</span>
                     </Link>
               
-        ) : bookOwner !== null && (
-                  <a className="button is-success"
+                   ) : bookOwner !== null && (
+                  <a className="button is-success is-responsive"
                     href={`mailto: ${bookOwner.email}?Subject=${book.author + ': ' + book.title}`}
                   >
                     Kapcsolatfelvétel a feltöltővel
                   </a>
-        )
-      }
+                    )
+                  }
                 </p>
-      { user._id === book.user && (        
+                { user._id === book.user && (        
                 <p className="control">
-                  <button onClick={deleteBook} className="button is-outlined is-danger is-responsive">
+                  <button onClick={handleDelete} className="button is-outlined is-danger is-responsive">
                     Törlés
                   </button>
                 </p>
@@ -198,7 +180,7 @@ function Book({isLoading, setIsLoading}) {
       ) }
 
           </div>
-            ) : 'Nem találtam a könyvet.'
+            ) : <p>'Nem találtam a könyvet.'</p>
         }
       </div>
       

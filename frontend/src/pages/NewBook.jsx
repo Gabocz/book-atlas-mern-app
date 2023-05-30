@@ -3,7 +3,8 @@ import { FaUpload, FaCheck } from "react-icons/fa"
 import BackButton from '../components/BackButton'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import { addBook } from '../helpers/book'
+import { getGeoLocation } from '../helpers/geolocation'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 
@@ -20,12 +21,12 @@ function NewBook({ setIsLoading, isLoading }) {
   const files = fileList ? [...fileList] : [];
 
   const {user} = useContext(UserContext)
+  const {token} = user
     
   const navigate = useNavigate()
     
   const API_URL = '/books/'
   
-  let geolocation = {}
 
   const handleChange = (e) => {
     if (e.target.files.length > 3 ) {
@@ -40,70 +41,40 @@ function NewBook({ setIsLoading, isLoading }) {
     }
   }
   
-    
-  const getGeoLocation = async () => {
-    try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`)
-      const data = await response.json()
-      
-      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
-      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
-      
-      return geolocation
-      
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  
     const onSubmit = async (e) => {
       e.preventDefault()
-       setIsLoading(true)
-        await addBook().then(data => {
-          if(data) {
-            navigate('/')
-            toast.success('Sikeres feltöltés', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
-            setIsLoading(false)
-          } else {
-            toast.error('Nem sikerült a feltöltés. Próbáld újra.', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
-          }
-        }
-        )  
-    }
-
-    
-  const addBook = async () => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${user.token}`
-        }
-    }
-
-    const coords = await getGeoLocation()
-    
-    const bookData = new FormData()
+      setIsLoading(true)
+      const coords = await getGeoLocation(location)
+      const bookData = new FormData()
    
-    files.forEach((file, i) => {
-      bookData.append("image", file, file.name);
-    })
+      files.forEach((file, i) => {
+        bookData.append("image", file, file.name);
+        })
+
       bookData.append("author", author)
       bookData.append("title", title)
       bookData.append("location", location)
       bookData.append("lang", lang) 
       bookData.append("coords", JSON.stringify(coords))
+      await addBook(API_URL, token, bookData).then(data => {
+        if(data) {
+          navigate('/')
+          toast.success('Sikeres feltöltés', {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            theme: 'dark'
+            })
+          setIsLoading(false)
+            } else {
+                toast.error('Nem sikerült a feltöltés. Próbáld újra.', {
+                  position: toast.POSITION.BOTTOM_RIGHT,
+                  theme: 'dark'
+                })
+              }
+            }
+          )  
+      }
       
-    const response = await axios.post(API_URL, bookData, config)
-    
-    return response.data 
 
-  }
-  
    if(isLoading) {
       return <Spinner/>
     }

@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Book = require('../models/bookModel')
 const User = require('../models/userModel')
+const { deleteFileFromGCS } = require('../middleware/upload')
 
  
 const registerBook = asyncHandler(async (req, res) => {
@@ -69,6 +70,9 @@ const updateBook = asyncHandler(async (req, res) => {
        throw new Error('Felhasználó nem található.')
     }
     const book = await Book.findById(req.params.id)
+    const fileNames = []
+    book.images.forEach(img => fileNames.push(img.filename))
+    console.log(fileNames)
  
     if(!book) {
        res.status(404)
@@ -78,6 +82,10 @@ const updateBook = asyncHandler(async (req, res) => {
     if(book.user.toString() !== req.user.id) {
        res.status(401)
        throw new Error('Hiányzó jogosultság.')
+    }
+
+    if(fileNames) {
+        await deleteFileFromGCS(fileNames)
     }
  
     await book.remove()
@@ -108,13 +116,13 @@ const getBooks = asyncHandler(async (req, res) => {
 })
 
 const getBook = asyncHandler(async(req, res) => {
-    const book = await Book.findById(req.params.id)
-    if(!book) {
-        res.status(404)
-        throw new Error('Nem találtam ilyen könyvet.')
-    } else {
-        res.status(200).json(book)
-    }
+        const book = await Book.findById(req.params.id)
+        if(!book) {
+            res.status(404)
+            throw new Error('Nem találtam ilyen könyvet.')
+        } else {
+            res.status(200).json(book)
+          }
 })
 
 

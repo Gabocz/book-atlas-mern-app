@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
+import { fetchBook } from '../helpers/book'
 
 
 function EditBook({isLoading, setIsLoading}) {
@@ -16,28 +17,23 @@ function EditBook({isLoading, setIsLoading}) {
     const [ book, setBook ] = useState(false)
 
     useEffect(() => {
-      setIsLoading(true)
-      const fetchBook = async () => {
-        try {
-          const res = await axios.get(API_URL)
-          if(res.data) {
-              setBook(res.data)
-              setFormData({
-                author: res.data.author,
-                title: res.data.title,
-                location: res.data.location,
-                lang: res.data.lang,
-              })
-              setIsLoading(false)
-            } else {
-            console.log('Nem találtam a könyvet.')
-          }
-        } catch (error) {
-          console.log(error)
-        }  
-      }
-      fetchBook()
+      (async () => {
+        setIsLoading(true) 
+        const book = await fetchBook(API_URL)
+        if(book) {
+          setBook(book)
+          const { author, title, location, lang } = book
+          setFormData({
+            author,
+            title,
+            location,
+            lang
+          })
+          setIsLoading(false)
+        }
+      })()
   }, [params.id, API_URL, setIsLoading])
+  
 
     const [formData, setFormData] = useState({
         author: book.author,

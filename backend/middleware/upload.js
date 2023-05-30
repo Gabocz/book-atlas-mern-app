@@ -61,6 +61,30 @@ const sendUploadToGCS = (req, res, next) => {
     .catch(next);
 }
 
+const deleteFileFromGCS = async (fileNames) => {
+  let promises = []
+  fileNames.forEach(fileName => {
+    const promise = new Promise(async (resolve, reject) => {
+      try {
+      await storage.bucket(CLOUD_BUCKET).file(fileName).delete()
+      console.log(`gs://${CLOUD_BUCKET}/${fileName} deleted`)
+      resolve()
+      } catch (error) {
+        reject (error)
+      }
+      promises.push(promise)
+    })
+  })
+  Promise.all(promises)
+    .then(_ => {
+      promises = []
+    })
+}
+
+deleteFileFromGCS().catch(console.error)
+
+
 module.exports = {
   sendUploadToGCS,
+  deleteFileFromGCS
 }
