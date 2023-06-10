@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { FaUser, FaEnvelope, FaUserEdit, FaSave } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
-import axios from 'axios'
+import { fetchUsersBooks } from '../helpers/book'
 import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
@@ -12,6 +12,7 @@ function Profile({ setIsLoading, isLoading }) {
 
     const {user} = useContext(UserContext)
     const { updateUser } = useContext(UserContext)
+    const { token, _id, } = user
 
     const [formData, setFormData] = useState({
         name: user.name, 
@@ -24,27 +25,15 @@ function Profile({ setIsLoading, isLoading }) {
     const [ usersBooks, setUsersBooks ] = useState([])
 
     useEffect(() => {
-      setIsLoading(true)
-      const fetchUsersBooks = async () => {
-        try {
-          const {token} = JSON.parse(localStorage.getItem('user'))
-        const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-      }
-          const res = await axios.get(API_URL +'user/' + user._id, config)
-          if(res.data) {
-            setUsersBooks(res.data)
+      (async () => {
+        setIsLoading(true)
+        const books = await fetchUsersBooks(API_URL +'user/', _id, token)
+          if(books) {
+            setUsersBooks(books)
             setIsLoading(false)
           }
-        } catch(error) {
-          console.log(error)
-        }
-      }
-      fetchUsersBooks()
-      // eslint-disable-next-line
-    }, [user._id])
+      })()
+    }, [setIsLoading, _id, token])
 
     const onChange = (e) => {
       setFormData((prevState) => ({
@@ -52,7 +41,6 @@ function Profile({ setIsLoading, isLoading }) {
         [e.target.id] : e.target.value,
     })) 
     }
-
 
     const onSubmit = async () => {
       setIsLoading(true)

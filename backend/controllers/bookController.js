@@ -5,7 +5,7 @@ const { deleteFileFromGCS } = require('../middleware/upload')
 
  
 const registerBook = asyncHandler(async (req, res) => {
-    const { title, author, location, lang, coords } = req.body
+  const { title, author, location, lang, coords } = req.body
 
   
   if(!title || !author|| !location) {
@@ -36,7 +36,9 @@ const registerBook = asyncHandler(async (req, res) => {
 
 
 const updateBook = asyncHandler(async (req, res) => {
-    // Get user using the id in the JWT
+    const { title, author, location, lang, coords, images } = req.body
+    const imagesObj = req.files.length ? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
+    : {url: undefined, filename: undefined}
     const user = await User.findById(req.user.id)
  
     if(!user) {
@@ -44,7 +46,6 @@ const updateBook = asyncHandler(async (req, res) => {
        throw new Error('Felhasználó nem található.')
     }
     const book = await Book.findById(req.params.id)
- 
     if(!book) {
        res.status(404)
        throw new Error('Nem találtam a könyvet.')
@@ -55,7 +56,7 @@ const updateBook = asyncHandler(async (req, res) => {
        throw new Error('Hiányzó jogosultság.')
     }
  
-    const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, geolocation: JSON.parse(coords), images: req.files.length ? imagesObj : images }, {new: true})
  
     res.status(200).json(updatedBook)
  })
@@ -72,7 +73,6 @@ const updateBook = asyncHandler(async (req, res) => {
     const book = await Book.findById(req.params.id)
     const fileNames = []
     book.images.forEach(img => fileNames.push(img.filename))
-    console.log(fileNames)
  
     if(!book) {
        res.status(404)
@@ -114,6 +114,7 @@ const getBooks = asyncHandler(async (req, res) => {
             })
     }
 })
+
 
 const getBook = asyncHandler(async(req, res) => {
         const book = await Book.findById(req.params.id)

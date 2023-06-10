@@ -18,8 +18,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/books', require('./routes/bookRoutes'))
 
-console.log(process.env.NODE_ENV)
-
 // Serve Frontend
 if(process.env.NODE_ENV === 'production') {
     // Set build folder as static
@@ -30,7 +28,6 @@ if(process.env.NODE_ENV === 'production') {
     app.get('/', (req, res) => {
         res.status(200).json({ message: 'Welcome to QuantumBook!'})
     })
-
 }
 
 app.use(errorHandler)

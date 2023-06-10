@@ -47,6 +47,18 @@ export const deleteBook = async (url, token) => {
     }
   }
 
+  export const updateBook = async(url, token, bookData) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    const response = await axios.put(url, bookData, config)
+    
+    return response.data
+    
+  }
+
 
 export const fetchBooks = async (url) => {
     try {
@@ -56,6 +68,21 @@ export const fetchBooks = async (url) => {
         totalPages: res.data.totalPages}
       } catch (error) {
       console.log(error)
-    }
-      
+    }    
   }
+
+
+export const fetchUsersBooks = async (url, id, token) => {
+  const config = {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+  }
+    try {
+      const res = await axios.get(url + id, config)
+      return res.data
+      } catch(error) {
+      console.log(error)
+    }
+  }
+  

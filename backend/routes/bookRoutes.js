@@ -35,6 +35,6 @@ const {
 router.route('/').post(authenticate, upload.array('image', 3), sendUploadToGCS, registerBook).get(getBooks)
 router.route('/search').get(searchBooks)
 router.route('/user/:id').get(authenticate, getAllBooksByUser).put(authenticate, updateBook)
-router.route('/:id').get(getBook).put(authenticate, updateBook).delete(authenticate, deleteBook)
+router.route('/:id').get(getBook).put(authenticate, upload.array('image', 3), sendUploadToGCS, updateBook).delete(authenticate, deleteBook)
 
 module.exports = router

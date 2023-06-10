@@ -36,12 +36,10 @@ function Home({ setIsLoading, isLoading }) {
    
   
   return (
-      <>
+    <>
       <div className="columns is-multiline mt-2">  
 
-        {books.length > 0  ? books.map(book => 
-
-       (
+        {books.length > 0  ? books.map(book => (
 
       <div className="column is-one-quarter" key={book._id}>
         {user ? (
@@ -94,9 +92,6 @@ function Home({ setIsLoading, isLoading }) {
       <Pagination totalPages={totalPages} paginate={paginate} />
       </>
 ) 
-
   }
-  
-    
     
 export default Home

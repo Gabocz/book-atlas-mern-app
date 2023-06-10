@@ -53,13 +53,9 @@ function Book({isLoading, setIsLoading}) {
         setIsLoading(false)
         navigate(`/users/${user.id}`)
         } else {
-          toast.error('Nem sikerült törölni.', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            theme: 'dark'
-          })
-        setIsLoading(false)
-        navigate(`/users/${user.id}`)
-      }
+          setIsLoading(false)
+          return
+        }
     }
     
 
@@ -83,7 +79,6 @@ function Book({isLoading, setIsLoading}) {
     }
    
     return (
-
       <div className="column">
         {book && bookOwner ? (
           <div className="columns is-multiline">
@@ -183,7 +178,6 @@ function Book({isLoading, setIsLoading}) {
             ) : <p>'Nem találtam a könyvet.'</p>
         }
       </div>
-      
     )
 }
 

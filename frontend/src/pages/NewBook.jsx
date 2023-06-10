@@ -63,7 +63,7 @@ function NewBook({ setIsLoading, isLoading }) {
             position: toast.POSITION.BOTTOM_RIGHT,
             theme: 'dark'
             })
-          setIsLoading(false)
+            setIsLoading(false)
             } else {
                 toast.error('Nem sikerült a feltöltés. Próbáld újra.', {
                   position: toast.POSITION.BOTTOM_RIGHT,

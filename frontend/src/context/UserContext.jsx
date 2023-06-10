@@ -13,7 +13,6 @@ const UserContextProvider = ({ children }) => {
     const fetchUser = () => {
       setUser(JSON.parse(localStorage.getItem('user')))
     }
-      
     fetchUser()
   }, [])
 
@@ -21,14 +20,12 @@ const UserContextProvider = ({ children }) => {
   const registerUser = async (userData) => {
     try {
       const response = await axios.post(API_URL + 'register', userData)
-  
-     if(response.data) {
-       localStorage.setItem('user', JSON.stringify(response.data))
-       setUser(response.data)
+      if(response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+        setUser(response.data)
      }
      return response.data
-  
-  } catch (error) {
+    } catch (error) {
     console.log(error)
   }
 }
@@ -42,36 +39,32 @@ const UserContextProvider = ({ children }) => {
         }
     }
       const response = await axios.put(API_URL + user._id, userData, config)
-
       if(response.data) {
-
+        const { email, name } = response.data
         const loggedInUser = JSON.parse(localStorage.getItem('user'))
-        loggedInUser.email = response.data.email
-        loggedInUser.name = response.data.name
+        loggedInUser.email = email
+        loggedInUser.name = name
         localStorage.setItem('user', JSON.stringify(loggedInUser))
         setUser(loggedInUser)
       }
-  
-     return response.data
-  
-  } catch (error) {
+       return response.data
+    } catch (error) {
     console.log(error)
+    }
   }
-  }
+
   
   const login = async (userData) => {
     try {
       const response = await axios.post(API_URL + 'login', userData)
-      
-      if(response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
-        setUser(response.data)
-      }
-      return response.data
-      
-    } catch(error) {
-      console.log(error)
-      setUser(null)
+        if(response.data) {
+          localStorage.setItem('user', JSON.stringify(response.data))
+          setUser(response.data)
+        }
+        return response.data
+      } catch(error) {
+        console.log(error)
+        setUser(null)
     }
   }
 
@@ -87,7 +80,6 @@ const UserContextProvider = ({ children }) => {
       login, 
       logout
     }
-
 
     return (
       <UserContext.Provider value={contextValue}>
