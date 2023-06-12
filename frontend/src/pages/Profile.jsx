@@ -43,20 +43,18 @@ function Profile({ setIsLoading, isLoading }) {
     }
 
     const onSubmit = async () => {
+      if(!name || !email) {
+        toast.error('Töltsd ki az összes kötelező mezőt.')
+        return
+      }
       setIsLoading(true)
         await updateUser(formData).then(data => { 
           if(data) {
-            toast.success('Sikeresen módosítottad az adataidat.', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
+            toast.success('Módosítottad az adataidat.')
             setChangeDetails(false)
             setIsLoading(false)
           } else {
-            toast.error('Nem sikerült módosítani az adataid. Próbáld újra.', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
+            toast.error('Adataid nem változtak.')
             setIsLoading(false)
         }
     })
@@ -110,7 +108,7 @@ function Profile({ setIsLoading, isLoading }) {
                       onChange={onChange}
                       className="input" 
                       type="text"
-                      disabled={!changeDetails} 
+                      disabled={!changeDetails}
                     />
                     <span className="icon is-small is-left">
                       <FaUser/>

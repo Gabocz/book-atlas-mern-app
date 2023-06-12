@@ -19,10 +19,7 @@ function Navbar({setFoundBooks}) {
 
   const onLogout = () => {
     logout()
-    toast.success('Sikeresen kiléptél.', {
-      position: toast.POSITION.BOTTOM_RIGHT,
-      theme: 'dark'
-    })
+    toast.success('Sikeres kilépés.')
     navigate('/')
   }
 
@@ -33,10 +30,7 @@ function Navbar({setFoundBooks}) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if(!searchTerm) {
-      return toast.error('A kereséshez írj valamit a keresőmezőbe.', {
-        position: toast.POSITION.BOTTOM_RIGHT,
-        theme: 'dark'
-      })
+      return toast.error('A kereséshez írj valamit a keresőmezőbe.')
     }
     searchBooks(searchTerm)
   }

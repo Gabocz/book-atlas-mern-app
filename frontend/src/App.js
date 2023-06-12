@@ -17,11 +17,11 @@ import Footer from './components/Footer'
 
 
 
-
 function App() {
 
     const [foundBooks, setFoundBooks] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+
     
 
    return (
@@ -50,7 +50,7 @@ function App() {
      </div>
     </Router>
     <Footer/>
-    <ToastContainer/>
+    <ToastContainer position='bottom-right' theme='dark'/>
     </UserContextProvider>
     </>
   );

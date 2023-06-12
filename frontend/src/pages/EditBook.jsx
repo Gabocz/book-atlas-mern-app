@@ -29,12 +29,11 @@ function EditBook({isLoading, setIsLoading}) {
   const files = fileList ? [...fileList] : [];
 
 
-  const API_URL = `/books/${params.id}`
 
   useEffect(() => {
     (async () => {
       setIsLoading(true) 
-      const book = await fetchBook(API_URL)
+      const book = await fetchBook(params.id)
       if(book) {
         setBook(book)
         const { author, title, location, lang, images } = book
@@ -48,15 +47,12 @@ function EditBook({isLoading, setIsLoading}) {
         setIsLoading(false)
       }
     })()
-  }, [params.id, API_URL, setIsLoading])
+  }, [params.id, setIsLoading])
   
     const handleChange = (e) => {
       if (e.target.files.length > 3 ) {
         setCanSubmit(false)
-        return toast.error('Legfeljebb 3 képet tölthetsz fel.', {
-          position: toast.POSITION.BOTTOM_RIGHT, 
-          theme: 'dark'
-        })
+        return toast.error('Legfeljebb 3 képet tölthetsz fel.')
       } else {
         setCanSubmit(true)
         setFileList(e.target.files)
@@ -89,19 +85,13 @@ function EditBook({isLoading, setIsLoading}) {
         bookData.append("lang", lang) 
         bookData.append("coords", JSON.stringify(coords))
 
-        await updateBook(API_URL, token, bookData).then(data => {
+        await updateBook(params.id, token, bookData).then(data => {
           if(data) {
             navigate('/')
-            toast.success('Sikeres módosítás', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
+            toast.success('Sikeres módosítás')
             setIsLoading(false)
           } else {
-            toast.error('Nem sikerült módosítani. Próbáld újra.', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
+            toast.error('Nem sikerült módosítani. Próbáld újra.')
           }
         }
         )  

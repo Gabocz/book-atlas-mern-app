@@ -33,10 +33,7 @@ function Register({ setIsLoading, isLoading }) {
         e.preventDefault()
 
         if(password !== password2) {
-            toast.error('A jelszavak nem egyeznek.', {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              theme: 'dark'
-            })
+            toast.error('A jelszavak nem egyeznek.')
         } else {
             const userData = {
                 name, 
@@ -45,10 +42,7 @@ function Register({ setIsLoading, isLoading }) {
             }
                 await registerUser(userData).then(data => {
                   if(data) {
-                    toast.success('Sikeres regisztráció', {
-                      position: toast.POSITION.BOTTOM_RIGHT,
-                      theme: 'dark'
-                    })
+                    toast.success('Sikeres regisztráció')
                     navigate('/')
                     setFormData({
                        name: '',
@@ -58,10 +52,7 @@ function Register({ setIsLoading, isLoading }) {
                  })
                  setIsLoading(false)
                 } else {
-                    toast.error('Sikertelen regisztráció. Próbáld újra.', {
-                      position: toast.POSITION.BOTTOM_RIGHT,
-                      theme: 'dark'
-                  })
+                    toast.error('Sikertelen regisztráció. Próbáld újra.')
                 }
               })
             } 

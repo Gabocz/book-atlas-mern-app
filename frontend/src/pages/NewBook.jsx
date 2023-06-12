@@ -59,16 +59,10 @@ function NewBook({ setIsLoading, isLoading }) {
       await addBook(API_URL, token, bookData).then(data => {
         if(data) {
           navigate('/')
-          toast.success('Sikeres feltöltés', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            theme: 'dark'
-            })
+          toast.success('Sikeres feltöltés')
             setIsLoading(false)
             } else {
-                toast.error('Nem sikerült a feltöltés. Próbáld újra.', {
-                  position: toast.POSITION.BOTTOM_RIGHT,
-                  theme: 'dark'
-                })
+                toast.error('Nem sikerült a feltöltés. Próbáld újra.')
               }
             }
           )  

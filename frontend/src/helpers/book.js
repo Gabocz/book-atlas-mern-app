@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-export const fetchBook = async (url) => {
+const API_URL = '/books/'
+
+export const fetchBook = async (id) => {
     try {
-      const res = await axios.get(url)
+      const res = await axios.get(API_URL + id)
       return res.data
     } catch (error) {
       console.log(error)
@@ -19,14 +21,14 @@ export  const getBookOwner = async (id) => {
     } 
   }
 
-export const deleteBook = async (url, token) => {
+export const deleteBook = async (id, token) => {
   const config = {
     headers: {
     Authorization: `Bearer ${token}`
       }
     }
     try {
-      await axios.delete(url, config)
+      await axios.delete(API_URL + id, config)
     } catch (error) {
       console.log(error)
      }
@@ -47,13 +49,13 @@ export const deleteBook = async (url, token) => {
     }
   }
 
-  export const updateBook = async(url, token, bookData) => {
+  export const updateBook = async(id, token, bookData) => {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
-    const response = await axios.put(url, bookData, config)
+    const response = await axios.put(API_URL + id, bookData, config)
     
     return response.data
     

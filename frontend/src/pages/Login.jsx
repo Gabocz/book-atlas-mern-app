@@ -40,15 +40,9 @@ function Login() {
                   email: '',
                   password: '',
                }) 
-               toast.success('Sikeres belépés', {
-               position: toast.POSITION.BOTTOM_RIGHT,
-               theme: 'dark'
-               })     
+               toast.success('Sikeres belépés.')     
              } else {
-              toast.error('Hibás belépési adatok.', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                theme: 'dark'
-              })
+              toast.error('Hibás belépési adatok.')
              }
         })
       }

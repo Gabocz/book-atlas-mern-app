@@ -8,7 +8,8 @@ import BackButton from '../components/BackButton'
 import { fetchBook, getBookOwner, deleteBook } from '../helpers/book'
 import Spinner from '../components/Spinner'
 
-const API_URL = '/books/'
+
+
 
 function Book({isLoading, setIsLoading}) {
     const {user} = useContext(UserContext)
@@ -28,7 +29,7 @@ function Book({isLoading, setIsLoading}) {
     useEffect(() => {
           (async () => {
             setIsLoading(true)
-            const book = await fetchBook(API_URL + params.id)
+            const book = await fetchBook(params.id)
             if(book) {
               const { images, user, geolocation } = book
               setBook(book)
@@ -45,11 +46,8 @@ function Book({isLoading, setIsLoading}) {
     const handleDelete = async () => {
       setIsLoading(true)
       if(window.confirm('Biztosan törölni szeretnéd ezt a könyvet?')) {
-        await deleteBook(API_URL + params.id, token)
-        toast.success('Sikeres törlés.', {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          theme: 'dark'
-        })
+        await deleteBook(params.id, token)
+        toast.success('Sikeres törlés.')
         setIsLoading(false)
         navigate(`/users/${user.id}`)
         } else {
@@ -149,7 +147,7 @@ function Book({isLoading, setIsLoading}) {
                 </p>
                 <p className="control">
                   {user._id === book.user ? (
-                    <Link to={API_URL + book._id + '/edit'} className="button is-warning is-responsive">
+                    <Link to={`/books/${book._id}/edit`} className="button is-warning is-responsive">
                       <span className="icon"><FaEdit/></span>
                         <span>Szerkeszt</span>
                     </Link>
