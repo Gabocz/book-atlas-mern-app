@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { FaUpload, FaSave, FaTrashAlt, FaEdit } from "react-icons/fa"
-import BackButton from '../components/BackButton'
+import { FaTrashAlt, FaEdit, FaSave } from "react-icons/fa"
+import FileUploader from '../components/FileUploader'
+import ButtonGroup from '../components/ButtonGroup'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
@@ -173,33 +174,11 @@ function EditBook({isLoading, setIsLoading}) {
                 </div>
               </div>
               { !images.length || images[0].filename === 'default' ? (
-                <div className="file is-info has-name">
-                  <label id="image" className="file-label">
-                    <input
-                      onChange={handleChange}
-                      id="image"
-                      name="image"
-                      className="file-input" 
-                      type="file" 
-                      multiple
-                    />
-                    <span className="file-cta">
-                      <span className="file-icon">
-                        <FaUpload/>
-                      </span>
-                      <span className="file-label">
-                        Képet töltök fel
-                      </span>
-                    </span>
-                    <span className="file-name">
-                      {fileList && fileList.length ? fileList.length : 0} fájl kiválasztva
-                    </span>
-                  </label>
-                </div>
+                <FileUploader handleChange={handleChange} fileList={fileList}/>
               ) : ( 
                 <div className='columns mt-2' >
                   {images.map(img => (
-                    <div key={img._id} className='column is-one-fifth'>
+                    <div key={img._id} className='column is-one-quarter'>
                       <figure className="image is-256x256">
                         <img src={img.url} alt='book'/>
                         <div className='field is-grouped is-flex is-justify-content-space-between'>
@@ -221,17 +200,7 @@ function EditBook({isLoading, setIsLoading}) {
                   ))}
                 </div>
               )}
-              <div className="field is-grouped mt-2">
-                <div className="control">
-                  <BackButton/>
-                </div>
-                <div className="control">
-                  <button type="submit" className="button has-background-info has-text-light is-responsive" disabled={!canSubmit}>
-                    <span className="icon"><FaSave/></span>
-                    <span>Mentés</span>
-                  </button>
-                </div>
-            </div>
+              <ButtonGroup canSubmit={canSubmit} btnText='Mentés' icon={<FaSave/>}/>           
             </form>
         </section>
         </div>

@@ -35,15 +35,15 @@ export const deleteBook = async (id, token) => {
   }
     
 
-  export const addBook = async (url, token, bookData) => {
+  export const addBook = async (token, bookData) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
       }    
     try {
-      const response = await axios.post(url, bookData, config)
-      return response.data 
+      const res = await axios.post(API_URL, bookData, config)
+      return res.data 
     } catch (error) {
       console.log(error)
     }
@@ -55,16 +55,14 @@ export const deleteBook = async (id, token) => {
         Authorization: `Bearer ${token}`
       }
     }
-    const response = await axios.put(API_URL + id, bookData, config)
-    
-    return response.data
-    
+    const res = await axios.put(API_URL + id, bookData, config)
+    return res.data
   }
 
 
-export const fetchBooks = async (url) => {
+export const fetchBooks = async (currentPage) => {
     try {
-      const res = await axios.get(url)
+      const res = await axios.get(API_URL + "?page=" + currentPage)
       return {
         books : res.data.books, 
         totalPages: res.data.totalPages}
@@ -84,6 +82,17 @@ export const fetchUsersBooks = async (url, id, token) => {
       const res = await axios.get(url + id, config)
       return res.data
       } catch(error) {
+      console.log(error)
+    }
+  }
+
+  
+  export const searchBooks = async (searchTerm) => {
+    try {
+      const res = await axios.get(API_URL + `search/?query=${searchTerm}`)
+      console.log(res.data)
+      return res.data
+    } catch(error) {
       console.log(error)
     }
   }

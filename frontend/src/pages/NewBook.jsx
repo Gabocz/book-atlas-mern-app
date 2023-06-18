@@ -1,12 +1,13 @@
 import { useState, useContext } from 'react'
-import { FaUpload, FaCheck } from "react-icons/fa"
-import BackButton from '../components/BackButton'
+import FileUploader from '../components/FileUploader'
+import { FaCheck } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { addBook } from '../helpers/book'
 import { getGeoLocation } from '../helpers/geolocation'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
+import ButtonGroup from '../components/ButtonGroup'
 
 
 function NewBook({ setIsLoading, isLoading }) {
@@ -24,9 +25,7 @@ function NewBook({ setIsLoading, isLoading }) {
   const {token} = user
     
   const navigate = useNavigate()
-    
-  const API_URL = '/books/'
-  
+     
 
   const handleChange = (e) => {
     if (e.target.files.length > 3 ) {
@@ -56,7 +55,7 @@ function NewBook({ setIsLoading, isLoading }) {
       bookData.append("location", location)
       bookData.append("lang", lang) 
       bookData.append("coords", JSON.stringify(coords))
-      await addBook(API_URL, token, bookData).then(data => {
+      await addBook(token, bookData).then(data => {
         if(data) {
           navigate('/')
           toast.success('Sikeres feltöltés')
@@ -141,44 +140,8 @@ function NewBook({ setIsLoading, isLoading }) {
                   />
                 </div>
               </div>
-              <div className="file has-name">
-                <label id="image" className="file-label">
-                  <input
-                    onChange={handleChange}
-                    id="image"
-                    name="image"
-                    className="file-input" 
-                    type="file"
-                    multiple
-                  />
-                  <span className="file-cta">
-                    <span className="file-icon">
-                      <FaUpload/>
-                    </span>
-                    <span className="file-label">
-                      Képet töltök fel
-                    </span>
-                  </span>
-                  <span className="file-name">
-                    {fileList && fileList.length ? fileList.length : 0} fájl kiválasztva
-                  </span>
-                </label>
-              </div>
-              <div className="field is-grouped mt-4">
-                <div className="control">
-                  <BackButton/>
-                </div>
-                <div className="control">
-                  <button type="submit" className="button is-primary is-outlined is-responsive" disabled={!canSubmit}>
-                    <span className="icon">
-                      <FaCheck/>
-                    </span>
-                    <span>
-                      Feltöltöm
-                    </span>
-                   </button>
-                </div>
-              </div>
+              <FileUploader handleChange={handleChange} fileList={fileList}/>
+              <ButtonGroup canSubmit={canSubmit} btnText='Feltöltöm' icon={<FaCheck/>}/>
             </form>
         </section>
       </div>

@@ -1,19 +1,17 @@
 import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../context/UserContext'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { FaEdit, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { FaEdit } from 'react-icons/fa'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { toast } from 'react-toastify'
 import BackButton from '../components/BackButton'
+import ImgCarouselControls from '../components/ImgCarouselControls'
 import { fetchBook, getBookOwner, deleteBook } from '../helpers/book'
 import Spinner from '../components/Spinner'
 
 
-
-
 function Book({isLoading, setIsLoading}) {
     const {user} = useContext(UserContext)
-    const { token } = user
     const [ book, setBook ] = useState(null)
     const [ images, setImages ] = useState([])
     const [ currentImgIdx, setCurrentImgIdx ] = useState(0)
@@ -46,7 +44,7 @@ function Book({isLoading, setIsLoading}) {
     const handleDelete = async () => {
       setIsLoading(true)
       if(window.confirm('Biztosan törölni szeretnéd ezt a könyvet?')) {
-        await deleteBook(params.id, token)
+        await deleteBook(params.id, user.token)
         toast.success('Sikeres törlés.')
         setIsLoading(false)
         navigate(`/users/${user.id}`)
@@ -56,22 +54,6 @@ function Book({isLoading, setIsLoading}) {
         }
     }
     
-
-    const handleLeftClick = () => {
-      if(currentImgIdx > 0) {
-        setCurrentImgIdx(prev => {
-          return prev - 1
-        })
-        }
-      }
-     
-    const handleRightClick = () => {
-      if(currentImgIdx >= images.length - 1 ) {
-        return
-        }
-        setCurrentImgIdx(currentImgIdx + 1)
-      }
-
     if(isLoading) {
       return <Spinner/>
     }
@@ -87,26 +69,11 @@ function Book({isLoading, setIsLoading}) {
                     <img src={images[currentImgIdx].url} alt="book"/>
                   </figure>
               {images.length > 1 && (
-                <div className="field has-addons is-flex is-justify-content-center">
-                    <p className="control">
-                      <button 
-                        onClick={handleLeftClick} 
-                        className="button is-responsive"
-                        disabled={currentImgIdx === 0}
-                      >
-                        <FaArrowLeft/>
-                      </button>
-                    </p>
-                    <p className="control">
-                      <button 
-                        onClick={handleRightClick} 
-                        className="button is-responsive"
-                        disabled={currentImgIdx === images.length - 1}
-                      >
-                        <FaArrowRight/>
-                      </button>
-                    </p>
-                  </div>
+                <ImgCarouselControls 
+                  currentImgIdx={currentImgIdx}
+                  setCurrentImgIdx={setCurrentImgIdx}
+                  numOfImgs={images.length}
+                />
               )}
                 </div>
                 <div className="card-content">
@@ -139,14 +106,13 @@ function Book({isLoading, setIsLoading}) {
                     </Marker>
               </MapContainer>
             </div>
-            { user && (
             <div className="column">
               <div className="field is-grouped">
                 <p className="control">
                   <BackButton />
                 </p>
                 <p className="control">
-                  {user._id === book.user ? (
+                  { user && user._id === book.user ? (
                     <Link to={`/books/${book._id}/edit`} className="button is-warning is-responsive">
                       <span className="icon"><FaEdit/></span>
                         <span>Szerkeszt</span>
@@ -154,14 +120,14 @@ function Book({isLoading, setIsLoading}) {
               
                    ) : bookOwner !== null && (
                   <a className="button is-success is-responsive"
-                    href={`mailto: ${bookOwner.email}?Subject=${book.author + ': ' + book.title}`}
+                    href={user ? `mailto: ${bookOwner.email}?Subject=${book.author + ': ' + book.title}` : '/login'}
                   >
                     Kapcsolatfelvétel a feltöltővel
                   </a>
                     )
                   }
                 </p>
-                { user._id === book.user && (        
+                { user && user._id === book.user && (        
                 <p className="control">
                   <button onClick={handleDelete} className="button is-outlined is-danger is-responsive">
                     Törlés
@@ -170,8 +136,6 @@ function Book({isLoading, setIsLoading}) {
           )}
               </div>
             </div>
-      ) }
-
           </div>
             ) : <p>'Nem találtam a könyvet.'</p>
         }

@@ -20,18 +20,22 @@ const bookSchema = mongoose.Schema({
     title: {
         type: String, 
         required: [true, 'Kérlek, add meg a könyv címét.'],
+        trim: true
     },
     author: {
         type: String, 
         required: [true, 'Kérlek, add meg a szerzőt.'], 
+        trim: true
     },
     location: {
         type: String, 
-        required: [true, 'Kérlek, add meg a címet']
+        required: [true, 'Kérlek, add meg a címet'],
+        trim: true 
     }, 
     lang: {
         type: String,
-        default: 'magyar'
+        default: 'magyar',
+        trim: true
     }, 
     images: [ImageSchema],
             

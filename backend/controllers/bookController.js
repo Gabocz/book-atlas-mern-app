@@ -71,8 +71,8 @@ const updateBook = asyncHandler(async (req, res) => {
        throw new Error('Felhasználó nem található.')
     }
     const book = await Book.findById(req.params.id)
-    const fileNames = []
-    book.images.forEach(img => fileNames.push(img.filename))
+    let fileNames = []
+    book.images.forEach(img => img.filename !== 'default' ? fileNames.push(img.filename) : fileNames = null)
  
     if(!book) {
        res.status(404)

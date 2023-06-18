@@ -79,9 +79,9 @@ const deleteFileFromGCS = async (fileNames) => {
     .then(_ => {
       promises = []
     })
+    .catch(console.error)
 }
 
-deleteFileFromGCS().catch(console.error)
 
 
 module.exports = {
