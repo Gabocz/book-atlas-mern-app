@@ -1,7 +1,7 @@
 import { FaReply } from "react-icons/fa"
 import { Link, useNavigate } from 'react-router-dom'
 
-function BackButton({url}) {
+function BackButton() {
 
     const navigate = useNavigate()
 

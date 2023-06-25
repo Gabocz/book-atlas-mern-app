@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import BookCard from '../components/BookCard'
 import Pagination from '../components/Pagination'
 import Spinner from '../components/Spinner'
@@ -10,10 +11,8 @@ function Home({ setIsLoading, isLoading }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
-
   const paginate = pageNumber => setCurrentPage(pageNumber);
-    
-    
+     
   useEffect(() => {
     (async () => {
         setIsLoading(true)
@@ -30,14 +29,17 @@ function Home({ setIsLoading, isLoading }) {
     return <Spinner/>
   }
    
-
   return (
     <>
       <div className="columns is-multiline mt-2">
         {books.length ? books.map(book => (
-          <BookCard key={book._id} book={book} />
-        )): (
-          <p>Nem találtam könyveket.</p>
+          <div key={book._id} className="column is-one-quarter">
+            <Link to={'/books/' + book._id}>
+              <BookCard book={book} />
+            </Link>
+          </div>
+          )): (
+            <p>Nem találtam könyveket.</p>
         )}  
       </div> 
       <Pagination totalPages={totalPages} paginate={paginate} />

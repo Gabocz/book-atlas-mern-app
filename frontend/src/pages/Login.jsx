@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import BackButton from '../components/BackButton'
 import { FaEnvelope, FaSignInAlt } from 'react-icons/fa'
 import { UserContext } from '../context/UserContext'
 import { toast } from 'react-toastify'
@@ -50,7 +51,8 @@ function Login() {
       if(user) {
         return (
           <div className="column">
-            <p>Már be vagy jelentkezve.</p>
+            <h1 className="title is-5">Már be vagy jelentkezve.</h1>
+            <BackButton/>
           </div>
         )
       }

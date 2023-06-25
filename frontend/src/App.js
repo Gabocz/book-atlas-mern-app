@@ -13,6 +13,7 @@ import Profile from './pages/Profile'
 import Book from './pages/Book'
 import EditBook from './pages/EditBook'
 import SearchResults from './pages/SearchResults'
+import NotFound from './components/NotFound'
 import Footer from './components/Footer'
 
 
@@ -46,6 +47,7 @@ function App() {
       </Route>
       <Route path='/books/search-results' element={<SearchResults foundBooks={foundBooks}/>}>
       </Route>
+      <Route path='*' element={<NotFound/>}></Route>
     </Routes>
      </div>
     </Router>
