@@ -1,23 +1,23 @@
-const asyncHandler = require('express-async-handler')
 const Book = require('../models/bookModel')
 const User = require('../models/userModel')
 const { deleteFileFromGCS } = require('../middleware/upload')
+const BadRequestError = require('../../errors/bad-request')
+const NotFoundError = require('../../errors/not-found')
+const UnauthorizedError = require('../../errors/unauthorized')
+const mongoose = require('mongoose')
 
  
-const registerBook = asyncHandler(async (req, res) => {
+const registerBook = async (req, res) => {
   const { title, author, location, lang, coords } = req.body
 
-  
   if(!title || !author|| !location) {
-      res.status(400)
-      throw new Error('Töltsd ki az összes kötelező mezőt.')
+      throw new BadRequestError('Töltsd ki az összes kötelező mezőt.')
     }
 
     const user = await User.findById(req.user.id)
     
     if(!user) {
-        res.status(404)
-        throw new Error('Felhasználó nem található.')
+        throw new NotFoundError('Felhasználó nem található.')
     }
 
     const book = await Book.create({
@@ -32,56 +32,50 @@ const registerBook = asyncHandler(async (req, res) => {
         
     })
     res.status(201).json(book)
-})
+}
 
 
-const updateBook = asyncHandler(async (req, res) => {
+const updateBook = async (req, res) => {
     const { title, author, location, lang, coords, images } = req.body
     const imagesObj = req.files.length ? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
     : {url: undefined, filename: undefined}
     const user = await User.findById(req.user.id)
  
     if(!user) {
-       res.status(401)
-       throw new Error('Felhasználó nem található.')
+       throw new NotFoundError('Felhasználó nem található.')
     }
     const book = await Book.findById(req.params.id)
     if(!book) {
-       res.status(404)
-       throw new Error('Nem találtam a könyvet.')
+       throw new NotFoundError('Nem találtam a könyvet.')
     }
  
     if(book.user.toString() !== req.user.id) {
-       res.status(401)
-       throw new Error('Hiányzó jogosultság.')
+       throw new UnauthorizedError('Hiányzó jogosultság.')
     }
  
     const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, geolocation: JSON.parse(coords), images: req.files.length ? imagesObj : images }, {new: true})
  
     res.status(200).json(updatedBook)
- })
+ }
 
 
- const deleteBook = asyncHandler(async (req, res) => {
+ const deleteBook = async (req, res) => {
     // Get user using the id in the JWT
     const user = await User.findById(req.user.id)
  
     if(!user) {
-       res.status(401)
-       throw new Error('Felhasználó nem található.')
+       throw new NotFoundError('Felhasználó nem található.')
     }
     const book = await Book.findById(req.params.id)
     let fileNames = []
     book.images.forEach(img => img.filename !== 'default' ? fileNames.push(img.filename) : fileNames = null)
  
     if(!book) {
-       res.status(404)
-       throw new Error('Nem találtam a könyvet.')
+       throw new NotFoundError('Nem találtam a könyvet.')
     }
  
     if(book.user.toString() !== req.user.id) {
-       res.status(401)
-       throw new Error('Hiányzó jogosultság.')
+       throw new UnauthorizedError('Hiányzó jogosultság.')
     }
 
     if(fileNames) {
@@ -91,10 +85,10 @@ const updateBook = asyncHandler(async (req, res) => {
     await book.remove()
  
     res.status(200).json({success: true})
- })
+ }
  
 
-const getBooks = asyncHandler(async (req, res) => {
+const getBooks = async (req, res) => {
     const { page = 1, limit = 8 } = req.query
     const books = await Book.find()
         .limit(limit * 1)
@@ -103,8 +97,7 @@ const getBooks = asyncHandler(async (req, res) => {
         .exec()
             
         if(!books) {
-            res.status(404)
-            throw new Error('Nem találtunk könyveket.')
+            throw new NotFoundError('Nem találtunk könyveket.')
         } else {
         const count = await Book.countDocuments()
             res.status(200).json({
@@ -113,48 +106,44 @@ const getBooks = asyncHandler(async (req, res) => {
                 currentPage: page
             })
     }
-})
+}
 
 
-const getBook = asyncHandler(async(req, res) => {
-        const book = await Book.findById(req.params.id)
-        if(!book) {
-            res.status(404)
-            throw new Error('Nem találtam ilyen könyvet.')
+const getBook = async(req, res) => {
+    const book = await Book.findById(req.params.id)
+    if(!book) {
+        throw new NotFoundError('Nem találtam ilyen könyvet.')
         } else {
-            res.status(200).json(book)
-          }
-})
+        res.status(200).json(book)
+    }
+}
 
 
 
-const getAllBooksByUser = asyncHandler(async(req, res) => {
-    const user = await User.findById(req.user.id)
+const getAllBooksByUser = async(req, res) => {
+    const user = await User.findById(req.params.id)
 
     if(!user) {
-        res.status(404)
-        throw new Error('Felhasználó nem található')
+        throw new NotFoundError('Felhasználó nem található')
     }
-    const books = await Book.find({user: req.user.id})
+    const books = await Book.find({user: req.params.id})
 
     res.status(200).json(books)
-})
+}
 
 
-const searchBooks = asyncHandler(async(req, res) => {
+const searchBooks = async(req, res) => {
     const searchTerm = req.query.query
     const newReg = new RegExp(searchTerm, 'i')
     if(!searchTerm) {
-        res.status(400)
-        throw new Error('A kereséshez írj valamit a keresőmezőbe!')
+        throw new BadRequestError('A kereséshez írj valamit a keresőmezőbe!')
     }
     const books = await Book.find({ $or: [{ author: { '$regex': newReg } }, { title: { '$regex': newReg } }] })
     if(books.length === 0) {
-        res.status(404)
-        throw new Error('A keresés nem hozott eredményt.')
+        throw new NotFoundError('A keresés nem hozott eredményt.')
     }
     res.status(200).json(books)
-})
+}
 
 
 

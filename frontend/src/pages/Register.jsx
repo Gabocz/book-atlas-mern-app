@@ -34,6 +34,8 @@ function Register({ setIsLoading, isLoading }) {
 
         if(password !== password2) {
             toast.error('A jelszavak nem egyeznek.')
+            setIsLoading(false)
+            return
         } else {
             const userData = {
                 name, 

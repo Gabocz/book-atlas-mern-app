@@ -5,13 +5,12 @@ import Pagination from '../components/Pagination'
 import Spinner from '../components/Spinner'
 import { fetchBooks } from '../helpers/book'
 
-
 function Home({ setIsLoading, isLoading }) {
   const [books, setBooks] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const paginate = pageNumber => setCurrentPage(pageNumber)
      
   useEffect(() => {
     (async () => {

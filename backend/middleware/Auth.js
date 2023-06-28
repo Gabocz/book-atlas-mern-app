@@ -1,15 +1,15 @@
-const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const UnauthorizedError = require('../../errors/unauthorized')
 
-const authenticate = asyncHandler(async (req, res, next) => {
-    console.log(req.headers.authorization)
+const authenticate = async (req, res, next) => {
+    const authHeader = req.headers.authorization
     let token
 
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    if(authHeader && authHeader.startsWith('Bearer ')) {
         try {
             // get token from header
-            token = req.headers.authorization.split(' ')[1]
+            token = authHeader.split(' ')[1]
             // verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
             // get user from token
@@ -17,15 +17,12 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
         next()
         } catch (error) {
-          console.log(error)
-          res.status(401)
-          throw new Error('Hiányzó jogosultság.')
+          throw new UnauthorizedError('Hiányzó jogosultság.')
         }
     }
     if(!token) {
-        res.status(401)
-          throw new Error('Hiányzó jogosultság.')
+          throw new UnauthorizedError('Hiányzó jogosultság.')
     }
-})
+}
 
 module.exports = { authenticate }

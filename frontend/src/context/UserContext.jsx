@@ -38,7 +38,7 @@ const UserContextProvider = ({ children }) => {
             Authorization: `Bearer ${token}`
         }
     }
-      const response = await axios.put(API_URL + user._id, userData, config)
+      const response = await axios.put(API_URL + user.id, userData, config)
       if(response.data) {
         const { email, name } = response.data
         const loggedInUser = JSON.parse(localStorage.getItem('user'))

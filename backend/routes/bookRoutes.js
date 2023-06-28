@@ -3,17 +3,6 @@ const router = express.Router()
 const { authenticate } = require('../middleware/Auth')
 const multer = require('multer')
 const { sendUploadToGCS } = require('../middleware/upload')
-// const path = require('path')
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
-//   }
-// })
-
 const storage = multer.memoryStorage()
 const upload = multer({
     storage: storage,

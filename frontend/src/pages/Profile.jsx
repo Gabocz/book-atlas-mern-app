@@ -12,7 +12,7 @@ function Profile({ setIsLoading, isLoading }) {
 
     const {user} = useContext(UserContext)
     const { updateUser } = useContext(UserContext)
-    const { token, _id, } = user
+    const { token, id, } = user
 
     const [formData, setFormData] = useState({
         name: user.name, 
@@ -27,13 +27,13 @@ function Profile({ setIsLoading, isLoading }) {
     useEffect(() => {
       (async () => {
         setIsLoading(true)
-        const books = await fetchUsersBooks(API_URL +'user/', _id, token)
+        const books = await fetchUsersBooks(id, token)
           if(books) {
             setUsersBooks(books)
             setIsLoading(false)
           }
       })()
-    }, [setIsLoading, _id, token])
+    }, [setIsLoading, id, token])
 
     const onChange = (e) => {
       setFormData((prevState) => ({

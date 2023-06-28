@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 const API_URL = '/books/'
 
 export const fetchBook = async (id) => {
@@ -61,25 +62,27 @@ export const deleteBook = async (id, token) => {
 
 
 export const fetchBooks = async (currentPage) => {
-    try {
+  try {
       const res = await axios.get(API_URL + "?page=" + currentPage)
       return {
         books : res.data.books, 
         totalPages: res.data.totalPages}
       } catch (error) {
       console.log(error)
-    }    
-  }
+    } 
+}
+       
+  
 
 
-export const fetchUsersBooks = async (url, id, token) => {
+export const fetchUsersBooks = async (id, token) => {
   const config = {
     headers: {
         Authorization: `Bearer ${token}`
     }
   }
     try {
-      const res = await axios.get(url + id, config)
+      const res = await axios.get(API_URL + '/user/' + id, config)
       return res.data
       } catch(error) {
       console.log(error)
