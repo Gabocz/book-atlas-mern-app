@@ -83,7 +83,7 @@ function Navbar({setFoundBooks}) {
             <div className="navbar-end">
               <div className='navbar-item'>
                 <div className="buttons">
-                  <Link to={`/users/${user._id}`} className="button is-light is-active">
+                  <Link to={`/users/${user.id}`} className="button is-light is-active">
                     <span className="icon"><FaUser/></span>
                     <strong>{user.name}</strong>
                   </Link>        

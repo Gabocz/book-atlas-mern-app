@@ -76,7 +76,7 @@ function Book({isLoading, setIsLoading}) {
                   <BackButton />
                 </p>
                 <p className="control">
-                  {user && user._id === book.user ? (
+                  {user && user.id === book.user ? (
                     <Link to={`/books/${book._id}/edit`} className="button is-warning is-responsive">
                       <span className="icon"><FaEdit/></span>
                         <span>Szerkeszt</span>
@@ -90,7 +90,7 @@ function Book({isLoading, setIsLoading}) {
                   </a>
                     )}
                 </p>
-                { user && user._id === book.user && (        
+                { user && user.id === book.user && (        
                 <p className="control">
                   <button onClick={handleDelete} className="button is-outlined is-danger is-responsive">
                     Törlés
