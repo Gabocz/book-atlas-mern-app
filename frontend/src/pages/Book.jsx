@@ -25,7 +25,7 @@ function Book({isLoading, setIsLoading}) {
     
     useEffect(() => {
           (async () => {
-            setIsLoading(true)
+              setIsLoading(true)
               const book = await fetchBook(params.id)
               if(book) {
               const { user, geolocation } = book
@@ -34,12 +34,13 @@ function Book({isLoading, setIsLoading}) {
               setBookOwner(owner)
               setMapCenter(geolocation)
               setIsLoading(false)
-            } else {
-              setIsLoading(false)
-              return toast.error('Nem találtam a könyvet.')
-            }           
+              } else {
+                setIsLoading(false)
+                navigate('/')
+                return toast.error('A keresett azonosítóval nem találtam könyvet.')
+              }           
           })()
-        }, [params.id, setIsLoading]) 
+        }, [params.id, setIsLoading, navigate]) 
 
        
     const handleDelete = async () => {

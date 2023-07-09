@@ -1,18 +1,32 @@
-const CustomAPIError = require('../../errors/custom-error')
 const { StatusCodes } = require('http-status-codes')
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log(err)
-  if (err instanceof CustomAPIError) {
-    return res
-      .status(err.statusCode)
-      .json({ 
-        msg: err.message,
-        stack: process.env.NODE_ENV === 'production' ? null : err.stack
-     })
+ 
+  let customError = {
+    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+    msg: err.message || 'Hiba történt. Próbáld újra később.'
   }
+  
+  if(err.name === 'ValidationError') {
+    customError.msg = Object.values(err.errors).map(item => item.message).join(' ')
+    customError.statusCode = 400
+  }
+
+  if(err.code && err.code === 11000) {
+    customError.msg = `A(z) ${err.keyValue.email} email címmel már létezik felhasználó. Használj másik email címet vagy jelentkezz be!`
+    customError.statusCode = 400
+  }
+
+  if(err.name === 'CastError') {
+    customError.msg = `A(z) ${err.value} azonosító nem található.`
+    customError.statusCode = 404
+  }
+
   return res
-    .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .send('Hiba történt. Próbáld újra.')
+    .status(customError.statusCode)
+    .json({
+      msg: customError.msg,
+      stack: process.env.NODE_ENV === 'production' ? null : err.stack
+    })
 }
 
 module.exports = errorHandlerMiddleware

@@ -15,7 +15,7 @@ const UserSchema = mongoose.Schema({
     },
     password: {
         type: String, 
-        required: [true, 'Kérlek, add meg a jelszavad']
+        required: [true, 'Kérlek, add meg a jelszavad.']
     }, 
     isAdmin: {
         type: Boolean,

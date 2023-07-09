@@ -121,12 +121,12 @@ const getBook = async(req, res) => {
 
 
 const getAllBooksByUser = async(req, res) => {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById(req.user._id)
 
     if(!user) {
         throw new NotFoundError('Felhasználó nem található')
     }
-    const books = await Book.find({user: req.params.id})
+    const books = await Book.find({user: req.user._id})
 
     res.status(200).json(books)
 }

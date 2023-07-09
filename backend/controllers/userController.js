@@ -17,7 +17,7 @@ const loginUser = async(req, res) => {
   const { email, password }  = req.body
     
   if(!email|| !password) {
-    throw new BadRequestError('Töltsd ki az összes kötelező mezőt.')
+    throw new BadRequestError('Add meg az email címet és a jelszót!')
   }
   
   const user = await User.findOne({email})
@@ -60,7 +60,7 @@ const updateUser = async(req, res) => {
     throw new UnauthorizedError('Hiányzó jogosultság.')
   }
 
-  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {new: true})
     res.status(StatusCodes.OK).json(updatedUser)
 }
       

@@ -46,15 +46,16 @@ function Register({ setIsLoading, isLoading }) {
                   if(data) {
                     toast.success('Sikeres regisztráció')
                     navigate('/')
-                    setFormData({
-                       name: '',
-                       email: '',
-                       password: '',
-                       password2: ''
-                 })
                  setIsLoading(false)
                 } else {
                     toast.error('Sikertelen regisztráció. Próbáld újra.')
+                    setIsLoading(false)
+                    setFormData({
+                      name: '',
+                      email: '',
+                      password: '',
+                      password2: ''
+                })
                 }
               })
             } 
