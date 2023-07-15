@@ -30,7 +30,7 @@ function Home({ setIsLoading, isLoading }) {
    
   return (
     <>
-      <div className="columns is-multiline mt-2">
+      <div className="columns is-multiline mt-1">
         {books.length ? books.map(book => (
           <div key={book._id} className="column is-one-quarter">
             <Link to={'/books/' + book._id}>

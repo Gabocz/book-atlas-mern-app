@@ -46,11 +46,11 @@ function Navbar({setFoundBooks}) {
 
     return (
       <>
-        <nav className="navbar" role="navigation" aria-label="main navigation">
+        <nav className="navbar mt-1" role="navigation" aria-label="main navigation">
           <div className="navbar-brand">
             <Link className="navbar-item   has-text-weight-bold is-size-4" to="/">
               <span className="icon is-small mr-1"><FaBookOpen/></span> 
-              <span>QuantumBook</span>
+              <span className='is-size-5-mobile'>QuantumBook</span>
             </Link>
             <Link onClick={() => setIsActive(!isActive)} role="button" className={isActive ? "navbar-burger is-active" : "navbar-burger"} aria-label="menu" aria-expanded="false" data-target="navbar">
               <span aria-hidden="true"></span>
@@ -61,7 +61,7 @@ function Navbar({setFoundBooks}) {
           <div id="navbarBasicExample" className={isActive ? "navbar-menu is-active" : "navbar-menu"}>
             <div className="navbar-start">
               <div className="navbar-item">
-                <form className='mt-2' onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                   <div className='field'>
                     <div className="control has-icons-right">
                       <input 
@@ -83,7 +83,7 @@ function Navbar({setFoundBooks}) {
             <div className="navbar-end">
               <div className='navbar-item'>
                 <div className="buttons">
-                  <Link to={`/users/${user.id}`} className="button is-light is-active">
+                  <Link to={`/users/${user.id}`} className="button is-light is-active is-responsive">
                     <span className="icon"><FaUser/></span>
                     <strong>{user.name}</strong>
                   </Link>        
@@ -91,7 +91,7 @@ function Navbar({setFoundBooks}) {
               </div>
               <div className="navbar-item">
                 <div className="buttons">
-                  <Link to="/new-book" className="button is-light">
+                  <Link to="/new-book" className="button is-light is-responsive">
                     <span className="icon"><FaUpload/></span> 
                     <span>Új könyv feltöltése</span>
                   </Link>
@@ -99,7 +99,7 @@ function Navbar({setFoundBooks}) {
               </div>
               <div className="navbar-item">
                 <div className="buttons">
-                  <button onClick={onLogout} className="button is-light">
+                  <button onClick={onLogout} className="button is-light is-responsive">
                     <span className="icon"><FaSignOutAlt/></span>
                     <span>Kijelentkezés</span>
                   </button>
@@ -111,10 +111,10 @@ function Navbar({setFoundBooks}) {
             <div className="navbar-end">
               <div className="navbar-item">
                 <div className="buttons">
-                  <Link to='/register' className="button is-outlined is-dark">
+                  <Link to='/register' className="button is-dark is-outlined is-responsive">
                   <span>Regisztráció</span>
                   </Link>
-                  <Link to='/login' className="button is-light">
+                  <Link to='/login' className="button is-dark is-outlined is-responsive">
                     Bejelentkezés
                   </Link>
                 </div>

@@ -68,7 +68,7 @@ function Register({ setIsLoading, isLoading }) {
     return (
         <div className="column">
         <header className="block px-2 py-2">
-          <h1 className="title is-3">
+          <h1 className="title is-size-4-mobile is-size-3-desktop">
             <i className='mr-2'><FaRegUser/></i>
             Regisztráció
           </h1>   
@@ -145,7 +145,7 @@ function Register({ setIsLoading, isLoading }) {
             </div>
             <div className="field is-fullwidth mt-5">
                 <div className="control">
-                  <button className="button is-outlined is-link">
+                  <button className="button is-outlined is-link is-responsive">
                     <span className="icon"><FaCheck/></span>
                     <span>Regisztrálok</span>
                   </button>

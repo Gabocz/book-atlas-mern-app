@@ -24,13 +24,13 @@ function BookCard({ book, ImgCarouselControl, bookOwner}) {
       <div className="card-content">
         <div className="media">
           <div className="media-content">
-            <p className="title is-4">{title}</p>
+            <p className="title is-size-4-desktop is-size-5-tablet is-size-6-mobile" >{title}</p>
             <p className="subtitle is-6">{author}</p>
           </div>
         </div>
         <div className="content">
-          <p>{location}</p>
-          {bookOwner && <p>Feltöltő: {bookOwner.name}</p>}
+          <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>{location}</p>
+          {bookOwner && <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>Feltöltő: {bookOwner.name}</p>}
         </div>
       </div>
     </div>

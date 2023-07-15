@@ -8,17 +8,17 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   
   if(err.name === 'ValidationError') {
     customError.msg = Object.values(err.errors).map(item => item.message).join(' ')
-    customError.statusCode = 400
+    customError.statusCode = StatusCodes.BAD_REQUEST
   }
 
   if(err.code && err.code === 11000) {
     customError.msg = `A(z) ${err.keyValue.email} email címmel már létezik felhasználó. Használj másik email címet vagy jelentkezz be!`
-    customError.statusCode = 400
+    customError.statusCode = StatusCodes.BAD_REQUEST
   }
 
   if(err.name === 'CastError') {
     customError.msg = `A(z) ${err.value} azonosító nem található.`
-    customError.statusCode = 404
+    customError.statusCode = StatusCodes.NOT_FOUND
   }
 
   return res

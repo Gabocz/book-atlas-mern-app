@@ -9,6 +9,7 @@ const registerUser = async(req, res) => {
   res.status(StatusCodes.CREATED).json({
       id: user._id, 
       name: user.name,
+      email: user.email,
       token: user.createJWT()
   })
 }
@@ -34,6 +35,7 @@ const loginUser = async(req, res) => {
   res.status(StatusCodes.OK).json({
     id: user._id, 
     name: user.name,
+    email: user.email,
     token: user.createJWT()
   })
 } 
@@ -61,7 +63,12 @@ const updateUser = async(req, res) => {
   }
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {new: true})
-    res.status(StatusCodes.OK).json(updatedUser)
+    res.status(StatusCodes.OK).json({
+      id: updatedUser._id, 
+      name: updatedUser.name, 
+      email: updatedUser.email, 
+      token: updatedUser.createJWT()
+    })
 }
       
 

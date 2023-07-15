@@ -36,8 +36,8 @@ function Book({isLoading, setIsLoading}) {
               setIsLoading(false)
               } else {
                 setIsLoading(false)
-                navigate('/')
-                return toast.error('A keresett azonosítóval nem találtam könyvet.')
+                navigate('/*', {replace: true})
+                toast.error('A keresett azonosítóval nem találtam könyvet.')
               }           
           })()
         }, [params.id, setIsLoading, navigate]) 

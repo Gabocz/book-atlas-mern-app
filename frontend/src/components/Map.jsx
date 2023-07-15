@@ -6,10 +6,13 @@ function Map({ mapCenter, author, title}) {
  
     return (
         <MapContainer
-        style={{height: "450px", width: "100%"}} 
-        center={[mapCenter.lat, mapCenter.lng]}
-        zoom={12} 
-        scrollWheelZoom={false}  
+          style={{
+            height: "400px", 
+            width: "100%", 
+          }} 
+          center={[mapCenter.lat, mapCenter.lng]}
+          zoom={12} 
+          scrollWheelZoom={false}  
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>

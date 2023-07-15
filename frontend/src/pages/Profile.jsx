@@ -76,7 +76,7 @@ function Profile({ setIsLoading, isLoading }) {
               <div className="media-content">
               <div className="field">
                 <div className="control">
-                  <button className="button" onClick={() => {
+                  <button className="button is-responsive" onClick={() => {
                     changeDetails && onSubmit()
                     setChangeDetails((prevState) => !prevState)
                 }}>
@@ -136,12 +136,12 @@ function Profile({ setIsLoading, isLoading }) {
             </div>
             </section>
             <section className="panel mt-3">
-              <h3 className="panel-heading">Feltöltéseim</h3>
+              <h3 className="panel-heading is-size-6-mobile">Feltöltéseim</h3>
           {usersBooks.length > 0 ? (
              <ul>
                {usersBooks.map(book => (
                 <Link key={book._id} to={API_URL + book._id} className="panel-block">
-                  <li>{book.author}: {book.title}</li>
+                  <p className='is-size-7-mobile'>{book.author}: {book.title}</p>
                 </Link>
                ))}
              </ul>

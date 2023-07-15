@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { FaTrashAlt, FaEdit, FaSave } from "react-icons/fa"
+import { FaSave } from "react-icons/fa"
 import FileUploader from '../components/FileUploader'
 import ButtonGroup from '../components/ButtonGroup'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -28,8 +28,7 @@ function EditBook({isLoading, setIsLoading}) {
   const {token} = user
   const navigate = useNavigate()
   const files = fileList ? [...fileList] : [];
-
-
+ 
 
   useEffect(() => {
     (async () => {
@@ -77,8 +76,8 @@ function EditBook({isLoading, setIsLoading}) {
           files.forEach((file, i) => {
           bookData.append("image", file, file.name);
           })
-        } else {
-          bookData.append('images', images)
+          } else {
+            bookData.append('images', images)
         }
         bookData.append("author", author)
         bookData.append("title", title)
@@ -93,15 +92,9 @@ function EditBook({isLoading, setIsLoading}) {
             setIsLoading(false)
           } else {
             toast.error('Nem sikerült módosítani. Próbáld újra.')
+            setIsLoading(false)
           }
-        }
-        )  
-    }
-
-    const handleClick = () => {
-      if(window.confirm('Tényleg törölni szeretnéd ezt a képet?')) {
-        console.log('Kép törölve')
-      }
+        })  
     }
 
 
@@ -181,20 +174,6 @@ function EditBook({isLoading, setIsLoading}) {
                     <div key={img._id} className='column is-one-quarter'>
                       <figure className="image is-256x256">
                         <img src={img.url} alt='book'/>
-                        <div className='field is-grouped is-flex is-justify-content-space-between'>
-                          <p className='control'>
-                            <button className='button is-danger is-outlined is-small is-responsive mt-3' onClick={handleClick}>
-                              <span className='icon'><FaTrashAlt/></span>
-                              <span>Töröl</span>
-                            </button>
-                            </p>
-                          <p className='control'>
-                            <button className='button is-info is-outlined is-small is-responsive mt-3'>
-                              <span className='icon'><FaEdit/></span>
-                              <span>Szerkeszt</span>
-                            </button>
-                          </p>
-                        </div>
                       </figure>
                     </div>
                   ))}

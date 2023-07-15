@@ -40,10 +40,11 @@ const UserContextProvider = ({ children }) => {
     }
       const response = await axios.put(API_URL + user.id, userData, config)
       if(response.data) {
-        const { email, name } = response.data
+        const { id, name, token } = response.data
         const loggedInUser = JSON.parse(localStorage.getItem('user'))
-        loggedInUser.email = email
         loggedInUser.name = name
+        loggedInUser.id = id
+        loggedInUser.token = token
         localStorage.setItem('user', JSON.stringify(loggedInUser))
         setUser(loggedInUser)
       }

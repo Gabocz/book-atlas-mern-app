@@ -3,31 +3,35 @@ const path = require("path");
 const express = require('express')
 const dotenv = require('dotenv').config()
 const cors = require('cors')
+const helmet = require('helmet')
+const xss = require('xss-clean')
 const PORT = process.env.PORT || 8000
 const errorHandler = require('./middleware/ErrorMiddleware')
-
+const notFoundMiddleware = require("./middleware/NotFound");
 
 const connectDB = require('./dbConfig');
-const notFound = require("./middleware/NotFound");
 
 connectDB()
 const app = express()
 
-app.use(cors())
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: true }))
+app.use(cors())
+app.use(helmet())
+app.use(xss())
 
+// routes
 app.use('/users', require('./routes/userRoutes'))
 app.use('/books', require('./routes/bookRoutes'))
 
 app.use(errorHandler)
-app.use(notFound)
+app.use(notFoundMiddleware)
 
 // Serve Frontend
 if(process.env.NODE_ENV === 'production') {
     // Set build folder as static
     app.use(express.static(path.join(__dirname, '../frontend/build')))
-    app.get('*', (req, res) => res.sendFile(__dirname, '../', 'frontend', 'build', 'index.html'))
+    app.get('*', (req, res) => res.sendFile(__dirname, '../frontend/build', 'index.html'))
     
 } else {
     app.get('/', (req, res) => {
