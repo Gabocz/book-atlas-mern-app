@@ -15,7 +15,6 @@ const authorize = async (req, res, next) => {
             // get user from token
             const user = await User.findById(decoded.userId).select('-password')
             req.user = user
-
         next()
         } catch (error) {
           throw new UnauthorizedError('Hiányzó jogosultság.')

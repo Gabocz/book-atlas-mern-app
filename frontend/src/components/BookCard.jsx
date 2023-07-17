@@ -1,7 +1,10 @@
-import { useState } from 'react'
-
+import { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { UserContext } from '../context/UserContext'
 
 function BookCard({ book, ImgCarouselControl, bookOwner}) {
+
+  const {user} = useContext(UserContext)
 
   const [ currentImgIdx, setCurrentImgIdx ] = useState(0)
   
@@ -30,7 +33,9 @@ function BookCard({ book, ImgCarouselControl, bookOwner}) {
         </div>
         <div className="content">
           <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>{location}</p>
-          {bookOwner && <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>Feltöltő: {bookOwner.name}</p>}
+          {bookOwner && <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>Feltöltő: {user.id ===book.user ? <strong>Én</strong> : (
+            <Link to={`/users/${bookOwner._id}`}>{bookOwner.name}</Link>)}
+            </p>}
         </div>
       </div>
     </div>

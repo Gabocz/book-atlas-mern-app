@@ -12,7 +12,8 @@ const upload = multer({
 const {
     registerBook, 
     getBooks, 
-    getAllBooksByUser, 
+    getAllBooksByLoggedInUser, 
+    getAllBooksByUser,
     searchBooks, 
     updateBook,
     deleteBook,
@@ -23,7 +24,8 @@ const {
 
 router.route('/').post(authorize, upload.array('image', 3), sendUploadToGCS, registerBook).get(getBooks)
 router.route('/search').get(searchBooks)
-router.route('/user/:id').get(authorize, getAllBooksByUser).put(authorize, updateBook)
+router.route('/user/:id').get(getAllBooksByUser)
+router.route('/user/:id').get(authorize, getAllBooksByLoggedInUser).put(authorize, updateBook)
 router.route('/:id').get(getBook).put(authorize, upload.array('image', 3), sendUploadToGCS, updateBook).delete(authorize, deleteBook)
 
 module.exports = router

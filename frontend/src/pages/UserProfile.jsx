@@ -1,0 +1,48 @@
+import { useState, useEffect } from 'react'
+import Spinner from '../components/Spinner'
+import { fetchAllBooksByUser } from '../helpers/book'
+import { getUserById } from '../helpers/user'
+import { useParams } from 'react-router-dom'
+import BackButton from '../components/BackButton'
+import UserUploads from '../components/UserUploads'
+
+function UserProfile({ isLoading, setIsLoading }) {
+
+    const [ user, setUser ] = useState(null)
+    const [ usersBooks, setUsersBooks ] = useState([])
+    const params = useParams()
+    console.log(params.id)
+
+    useEffect(() => {
+        (async () => {
+            setIsLoading(true)
+            const user = await getUserById(params.id)
+            setUser(user)
+            const books = await fetchAllBooksByUser(user._id)
+            setUsersBooks(books)
+            setIsLoading(false)
+        })()  
+    }, [params.id, setIsLoading])
+
+    if(isLoading) {
+        return <Spinner/>
+    }
+
+    return (
+      user && (
+        <div className="column">
+          <header className="message">
+            <div className="message-header">
+              <p>"{user.name}" nevű felhasználónk profilja</p>
+            </div>
+          </header>
+          <main>
+            <UserUploads user={user} usersBooks={usersBooks}/>
+            <BackButton/>      
+          </main>
+        </div> 
+      )
+    )
+}
+
+export default UserProfile

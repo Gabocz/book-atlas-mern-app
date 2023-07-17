@@ -43,22 +43,22 @@ const loginUser = async(req, res) => {
 
 const updateUser = async(req, res) => {
   const { name, email }  = req.body
-    
+  
   if(!name || !email) {
     throw new BadRequestError('Hiányzó adatok.')
   }
   
-  const user = await User.findById(req.user.id)
+  const foundUser = await User.findById(req.params.id)
 
-  if(!user) {
+  if(!foundUser) {
     throw new NotFoundError('Felhasználó nem található.')
   }
 
-  if(user.name === name && user.email === email) {
+  if(foundUser.name === name && foundUser.email === email) {
       throw new BadRequestError('Az adatok nem változtak.')
   }
 
-  if(user._id.toString() !== req.user.id) {
+  if(foundUser._id.toString() !== req.user.id) {
     throw new UnauthorizedError('Hiányzó jogosultság.')
   }
 

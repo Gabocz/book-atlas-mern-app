@@ -9,7 +9,8 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NewBook from './pages/NewBook'
-import Profile from './pages/Profile'
+import MyProfile from './pages/MyProfile'
+import UserProfile from './pages/UserProfile'
 import Book from './pages/Book'
 import EditBook from './pages/EditBook'
 import SearchResults from './pages/SearchResults'
@@ -40,9 +41,10 @@ function App() {
         <Route path='/new-book' element={<PrivateRoute/>}>
         <Route path='/new-book' element={<NewBook setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
         </Route>
-        <Route path='/users/:id' element={<PrivateRoute/>}>
-        <Route path='/users/:id' element={<Profile setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
+        <Route path='/users/my-profile' element={<PrivateRoute/>}>
+        <Route path='/users/my-profile' element={<MyProfile setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
         </Route>
+        <Route path='/users/:id' element={<UserProfile setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
         <Route path='/books/search-results' element={<SearchResults foundBooks={foundBooks}/>}>
         </Route>
         <Route path='*' element={<NotFound/>}></Route>

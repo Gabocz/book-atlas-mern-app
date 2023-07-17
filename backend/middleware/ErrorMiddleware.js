@@ -18,7 +18,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
   if(err.name === 'CastError') {
     customError.msg = `A(z) ${err.value} azonosító nem található.`
-    customError.statusCode = StatusCodes.NOT_FOUND
+    customError.statusCode = StatusCodes.BAD_REQUEST
   }
 
   return res
