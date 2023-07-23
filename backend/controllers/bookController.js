@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 
  
 const registerBook = async (req, res) => {
-  const { title, author, location, lang, coords } = req.body
+  const { title, author, location, lang } = req.body
 
   if(!title || !author|| !location) {
       throw new BadRequestError('Töltsd ki az összes kötelező mezőt.')
@@ -26,17 +26,15 @@ const registerBook = async (req, res) => {
         location, 
         lang, 
         images: req.files.length ? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
-        : {url: undefined, filename: undefined},
-        geolocation: JSON.parse(coords), 
+        : {url: undefined, filename: undefined}, 
         user: req.user.id
-        
     })
     res.status(201).json(book)
 }
 
 
 const updateBook = async (req, res) => {
-    const { title, author, location, lang, coords, images } = req.body
+    const { title, author, location, lang, images } = req.body
     const imagesObj = req.files.length ? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
     : {url: undefined, filename: undefined}
     const user = await User.findById(req.user.id)
@@ -53,7 +51,7 @@ const updateBook = async (req, res) => {
        throw new UnauthorizedError('Hiányzó jogosultság.')
     }
  
-    const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, geolocation: JSON.parse(coords), images: req.files.length ? imagesObj : images }, {new: true})
+    const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, images: req.files.length ? imagesObj : images }, {new: true})
  
     res.status(200).json(updatedBook)
  }

@@ -1,21 +1,29 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validator = require('validator')
 
 
 const UserSchema = mongoose.Schema({
     name: {
         type: String, 
         required: [true, 'Kérlek, add meg a neved.'],
+        minLength: [4, 'A felhasználónév nem lehet rövidebb 4 karakternél'],
+        maxLength: [50, 'A felhasználónév nem lehet hosszabb 50 karakternél'],
     },
     email: {
         type: String, 
         required: [true, 'Kérlek, add meg az email címed.'],
-        unique: true 
+        validate: {
+            validator: validator.isEmail,
+            message: 'Kérlek, adj meg egy érvényes email címet.'
+        },
+        unique: true,  
     },
     password: {
         type: String, 
-        required: [true, 'Kérlek, add meg a jelszavad.']
+        required: [true, 'Kérlek, add meg a jelszavad.'],
+        minLength: [6, 'A jelszó túl rövid.'],
     }, 
     isAdmin: {
         type: Boolean,

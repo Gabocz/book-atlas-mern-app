@@ -6,7 +6,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const xss = require('xss-clean')
 const PORT = process.env.PORT || 8000
-const errorHandler = require('./middleware/ErrorMiddleware')
+const errorHandlerMiddleware = require('./middleware/ErrorMiddleware')
 const notFoundMiddleware = require("./middleware/NotFound");
 
 const connectDB = require('./dbConfig');
@@ -24,8 +24,8 @@ app.use(xss())
 app.use('/users', require('./routes/userRoutes'))
 app.use('/books', require('./routes/bookRoutes'))
 
-app.use(errorHandler)
 app.use(notFoundMiddleware)
+app.use(errorHandlerMiddleware)
 
 // Serve Frontend
 if(process.env.NODE_ENV === 'production') {

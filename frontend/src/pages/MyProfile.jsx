@@ -75,7 +75,7 @@ function Profile({ setIsLoading, isLoading }) {
                 <div className="media-content">
                   <div className="field">
                     <div className="control">
-                      <button className="button is-responsive" onClick={() => {
+                      <button className="button button is-dark is-outlined is-responsive" onClick={() => {
                       changeDetails && onSubmit()
                       setChangeDetails((prevState) => !prevState)
                       }}>

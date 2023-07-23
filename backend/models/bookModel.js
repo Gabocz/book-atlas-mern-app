@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const getGeoLocation = require('../utils/geolocation')
 
 const ImageSchema = new mongoose.Schema({
     url: {
@@ -46,6 +47,10 @@ const bookSchema = mongoose.Schema({
 },
 {
    timestamps: true,
+})
+
+bookSchema.pre('save', async function () {
+   this.geolocation = await getGeoLocation(this.location)
 })
 
 module.exports = mongoose.model('Book', bookSchema)

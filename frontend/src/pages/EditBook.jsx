@@ -7,8 +7,6 @@ import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 import { fetchBook, updateBook } from '../helpers/book'
-import { getGeoLocation } from '../helpers/geolocation'
-
 
 
 function EditBook({isLoading, setIsLoading}) {
@@ -70,7 +68,6 @@ function EditBook({isLoading, setIsLoading}) {
     const onSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
-        const coords = await getGeoLocation(location)
         const bookData = new FormData()
         if(files) {
           files.forEach((file, i) => {
@@ -83,8 +80,7 @@ function EditBook({isLoading, setIsLoading}) {
         bookData.append("title", title)
         bookData.append("location", location)
         bookData.append("lang", lang) 
-        bookData.append("coords", JSON.stringify(coords))
-
+  
         await updateBook(params.id, token, bookData).then(data => {
           if(data) {
             navigate('/')

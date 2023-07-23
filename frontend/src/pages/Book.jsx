@@ -49,7 +49,7 @@ function Book({isLoading, setIsLoading}) {
         await deleteBook(params.id, user.token)
         toast.success('Sikeres törlés.')
         setIsLoading(false)
-        navigate(`/users/${user.id}`)
+        navigate(`/users/my-profile`)
         } else {
           setIsLoading(false)
           return

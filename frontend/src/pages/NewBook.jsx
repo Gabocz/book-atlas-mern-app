@@ -4,7 +4,6 @@ import { FaCheck } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { addBook } from '../helpers/book'
-import { getGeoLocation } from '../helpers/geolocation'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 import ButtonGroup from '../components/ButtonGroup'
@@ -43,18 +42,15 @@ function NewBook({ setIsLoading, isLoading }) {
     const onSubmit = async (e) => {
       e.preventDefault()
       setIsLoading(true)
-      const coords = await getGeoLocation(location)
       const bookData = new FormData()
    
       files.forEach((file, i) => {
         bookData.append("image", file, file.name);
         })
-
       bookData.append("author", author)
       bookData.append("title", title)
       bookData.append("location", location)
       bookData.append("lang", lang) 
-      bookData.append("coords", JSON.stringify(coords))
       await addBook(token, bookData).then(data => {
         if(data) {
           navigate('/')
@@ -62,6 +58,7 @@ function NewBook({ setIsLoading, isLoading }) {
             setIsLoading(false)
             } else {
                 toast.error('Nem sikerült a feltöltés. Próbáld újra.')
+                setIsLoading(false)
               }
             }
           )  

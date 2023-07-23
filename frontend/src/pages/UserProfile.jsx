@@ -11,7 +11,6 @@ function UserProfile({ isLoading, setIsLoading }) {
     const [ user, setUser ] = useState(null)
     const [ usersBooks, setUsersBooks ] = useState([])
     const params = useParams()
-    console.log(params.id)
 
     useEffect(() => {
         (async () => {
@@ -33,7 +32,7 @@ function UserProfile({ isLoading, setIsLoading }) {
         <div className="column">
           <header className="message">
             <div className="message-header">
-              <p>"{user.name}" nevű felhasználónk profilja</p>
+              <p>"{user.name}" nevű felhasználó profilja</p>
             </div>
           </header>
           <main>

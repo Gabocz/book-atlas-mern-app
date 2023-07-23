@@ -5,7 +5,13 @@ const NotFoundError = require('../../errors/not-found')
 const UnauthorizedError = require('../../errors/unauthorized')
 
 const registerUser = async(req, res) => {
-  const user = await User.create({ ...req.body })
+  const { name, email, password } = req.body
+  const isFirstAccount = await User.countDocuments({}) === 0
+  const isAdmin = isFirstAccount
+
+  const user = await User.create({ name, email, password, isAdmin })
+
+
   res.status(StatusCodes.CREATED).json({
       id: user._id, 
       name: user.name,
