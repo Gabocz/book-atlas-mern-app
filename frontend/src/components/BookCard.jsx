@@ -34,7 +34,7 @@ function BookCard({ book, ImgCarouselControl, bookOwner}) {
         <div className="content">
           <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>{location}</p>
           {bookOwner && <p className='is-size-6-desktop is-size-7-tablet is-size-7-mobile'>Feltöltő: 
-          {user && user.id ===book.user ? <strong> Én</strong> : (
+          {user && user.id === bookOwner._id ? <strong> Én</strong> : (
             user ? <Link to={`/users/${bookOwner._id}`}> {bookOwner.name}</Link>
             : <strong> {bookOwner.name}</strong>
             )}

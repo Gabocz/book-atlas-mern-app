@@ -17,7 +17,7 @@ function FileUploader({handleChange, fileList}) {
               <FaUpload/>
             </span>
             <span className="file-label">
-              Képet töltök fel
+              Képfeltöltés
             </span>
           </span>
           <span className="file-name">

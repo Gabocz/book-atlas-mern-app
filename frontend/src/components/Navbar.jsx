@@ -83,7 +83,7 @@ function Navbar({setFoundBooks}) {
             <div className="navbar-end">
               <div className='navbar-item'>
                 <div className="buttons">
-                  <Link to={`/users/my-profile`} className="button is-light is-active is-responsive">
+                  <Link to={`/users/my-profile`} className="button is-light is-active">
                     <span className="icon"><FaUser/></span>
                     <strong>{user.name}</strong>
                   </Link>        
@@ -91,7 +91,7 @@ function Navbar({setFoundBooks}) {
               </div>
               <div className="navbar-item">
                 <div className="buttons">
-                  <Link to="/new-book" className="button is-light is-responsive">
+                  <Link to="/new-book" className="button is-light">
                     <span className="icon"><FaUpload/></span> 
                     <span>Új könyv feltöltése</span>
                   </Link>
@@ -99,7 +99,7 @@ function Navbar({setFoundBooks}) {
               </div>
               <div className="navbar-item">
                 <div className="buttons">
-                  <button onClick={onLogout} className="button is-light is-responsive">
+                  <button onClick={onLogout} className="button is-light">
                     <span className="icon"><FaSignOutAlt/></span>
                     <span>Kijelentkezés</span>
                   </button>

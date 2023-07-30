@@ -13,7 +13,7 @@ function UserUploads({user, usersBooks}) {
                     </Link>
                   ))}
                 </ul>
-                ) : <p>{user.name} még nem töltött fel könyvet.</p>
+                ) : <p className="is-size-7-mobile">Még nincsenek feltöltött könyvek.</p>
               }
             </section>
     )

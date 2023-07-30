@@ -4,7 +4,7 @@ const { deleteFileFromGCS } = require('../middleware/upload')
 const BadRequestError = require('../../errors/bad-request')
 const NotFoundError = require('../../errors/not-found')
 const UnauthorizedError = require('../../errors/unauthorized')
-const mongoose = require('mongoose')
+
 
  
 const registerBook = async (req, res) => {
@@ -51,7 +51,7 @@ const updateBook = async (req, res) => {
        throw new UnauthorizedError('Hiányzó jogosultság.')
     }
  
-    const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, images: req.files.length ? imagesObj : images }, {new: true})
+    const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, images: req.files.length ? imagesObj : images }, {runValidators: true, new: true})
  
     res.status(200).json(updatedBook)
  }
@@ -108,12 +108,11 @@ const getBooks = async (req, res) => {
 
 
 const getBook = async(req, res) => {
-    const book = await Book.findById(req.params.id)
+    const book = await Book.findById(req.params.id).populate({path: 'user', select: 'name'})
     if(!book) {
         throw new NotFoundError('Nem találtam ilyen könyvet.')
-        } else {
-        res.status(200).json(book)
     }
+    res.status(200).json(book)
 }
 
 

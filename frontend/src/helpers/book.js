@@ -12,16 +12,6 @@ export const fetchBook = async (id) => {
     }  
 }
 
-export  const getBookOwner = async (id) => {
-    try {
-      const res = await axios.get(`/users/${id}`)
-      const bookOwner = res.data
-      return bookOwner
-      } catch(error) {
-      console.log(error)
-    } 
-  }
-
 export const deleteBook = async (id, token) => {
   const config = {
     headers: {

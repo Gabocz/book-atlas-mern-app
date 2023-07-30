@@ -12,9 +12,9 @@ const ImageSchema = new mongoose.Schema({
     }
 })
 
-const bookSchema = mongoose.Schema({
+const BookSchema = mongoose.Schema({
     user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         required: true, 
         ref: 'User'
     },
@@ -49,8 +49,8 @@ const bookSchema = mongoose.Schema({
    timestamps: true,
 })
 
-bookSchema.pre('save', async function () {
+BookSchema.pre('save', async function () {
    this.geolocation = await getGeoLocation(this.location)
 })
 
-module.exports = mongoose.model('Book', bookSchema)
+module.exports = mongoose.model('Book', BookSchema)

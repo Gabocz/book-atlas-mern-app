@@ -72,7 +72,7 @@ function NewBook({ setIsLoading, isLoading }) {
     return (
       <div className="column">
         <header className="block px-2 py-2">
-          <h1 className="title is-3">
+          <h1 className="title is-3 is-size-4-mobile">
                    Tölts fel új könyvet!
           </h1>   
         </header>

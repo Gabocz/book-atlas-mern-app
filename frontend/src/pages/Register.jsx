@@ -68,7 +68,7 @@ function Register({ setIsLoading, isLoading }) {
     return (
         <div className="column">
         <header className="block px-2 py-2">
-          <h1 className="title is-size-4-mobile is-size-3-desktop">
+          <h1 className="title is-3 is-size-4-mobile">
             <i className='mr-2'><FaRegUser/></i>
             Regisztráció
           </h1>   
