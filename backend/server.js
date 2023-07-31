@@ -5,6 +5,8 @@ const dotenv = require('dotenv').config()
 const cors = require('cors')
 const helmet = require('helmet')
 const xss = require('xss-clean')
+const rateLimiter = require('express-rate-limit')
+const mongoSanitize = require('express-mongo-sanitize')
 const PORT = process.env.PORT || 8000
 const errorHandlerMiddleware = require('./middleware/ErrorMiddleware')
 const notFoundMiddleware = require("./middleware/NotFound");
@@ -16,9 +18,16 @@ const app = express()
 
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: true }))
+
+app.use(rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 30
+}))
+
 app.use(cors())
 app.use(helmet())
 app.use(xss())
+app.use(mongoSanitize())
 
 // routes
 app.use('/users', require('./routes/userRoutes'))
