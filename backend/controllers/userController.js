@@ -1,16 +1,18 @@
-const { StatusCodes } = require('http-status-codes')
 const User = require('../models/userModel')
-const BadRequestError = require('../../errors/bad-request')
-const NotFoundError = require('../../errors/not-found')
-const UnauthorizedError = require('../../errors/unauthorized')
+const CustomError = require('../../errors')
+const { StatusCodes } = require('http-status-codes')
 
 const registerUser = async(req, res) => {
   const { name, email, password } = req.body
+
+  if(!name || !email || !password) {
+    throw new CustomError.BadRequestError('Add meg a neved, az e-mail címed és a jelszavad.')
+  }
+
   const isFirstAccount = await User.countDocuments({}) === 0
   const isAdmin = isFirstAccount
 
   const user = await User.create({ name, email, password, isAdmin })
-
 
   res.status(StatusCodes.CREATED).json({
       id: user._id, 
@@ -24,20 +26,21 @@ const loginUser = async(req, res) => {
   const { email, password }  = req.body
     
   if(!email|| !password) {
-    throw new BadRequestError('Add meg az email címet és a jelszót!')
+    throw new CustomError.BadRequestError('Add meg az email címet és a jelszót.')
   }
   
   const user = await User.findOne({email})
   
   if(!user) {
-    throw new UnauthorizedError('Hibás belépési adatok.')
+    throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
   }
 
   const isPasswordCorrect = await user.comparePassword(password)
 
   if(!isPasswordCorrect) {
-    throw new UnauthorizedError('Hibás belépési adatok.')
+    throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
   }
+
   res.status(StatusCodes.OK).json({
     id: user._id, 
     name: user.name,
@@ -51,21 +54,21 @@ const updateUser = async(req, res) => {
   const { name, email }  = req.body
   
   if(!name || !email) {
-    throw new BadRequestError('Hiányzó adatok.')
+    throw new CustomError.BadRequestError('Add meg az email címed és a neved.')
   }
   
   const foundUser = await User.findById(req.params.id)
 
   if(!foundUser) {
-    throw new NotFoundError('Felhasználó nem található.')
+    throw new CustomError.NotFoundError(`Nem található felhasználó ${req.params.id} azonosítóval.`)
   }
 
   if(foundUser.name === name && foundUser.email === email) {
-      throw new BadRequestError('Az adatok nem változtak.')
+      throw new CustomError.BadRequestError('Az adatok nem változtak.')
   }
 
   if(foundUser._id.toString() !== req.user.id) {
-    throw new UnauthorizedError('Hiányzó jogosultság.')
+    throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
   }
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {new: true})
@@ -81,7 +84,7 @@ const updateUser = async(req, res) => {
 const getUser = async(req, res) =>  {
   const user = await User.findById(req.params.id)
   if(!user) {
-    throw new NotFoundError('Felhasználó nem található.')
+    throw new CustomError.NotFoundError(`Nem található felhasználó ${req.params.id} azonosítóval.`)
   }
   res.status(StatusCodes.OK).json(user)
 }

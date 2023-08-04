@@ -1,23 +1,20 @@
 const Book = require('../models/bookModel')
 const User = require('../models/userModel')
 const { deleteFileFromGCS } = require('../middleware/upload')
-const BadRequestError = require('../../errors/bad-request')
-const NotFoundError = require('../../errors/not-found')
-const UnauthorizedError = require('../../errors/unauthorized')
+const CustomError = require('../../errors')
+const { StatusCodes } = require('http-status-codes')
 
-
- 
 const registerBook = async (req, res) => {
   const { title, author, location, lang } = req.body
 
   if(!title || !author|| !location) {
-      throw new BadRequestError('Töltsd ki az összes kötelező mezőt.')
+      throw new CustomError.BadRequestError('Töltsd ki az összes kötelező mezőt.')
     }
 
     const user = await User.findById(req.user.id)
     
     if(!user) {
-        throw new NotFoundError('Felhasználó nem található.')
+        throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user.id} azonosítóval.`)
     }
 
     const book = await Book.create({
@@ -25,11 +22,11 @@ const registerBook = async (req, res) => {
         author, 
         location, 
         lang, 
-        images: req.files.length ? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
+        images: req.files.length? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject }))
         : {url: undefined, filename: undefined}, 
         user: req.user.id
     })
-    res.status(201).json(book)
+    res.status(StatusCodes.CREATED).json(book)
 }
 
 
@@ -40,20 +37,20 @@ const updateBook = async (req, res) => {
     const user = await User.findById(req.user.id)
  
     if(!user) {
-       throw new NotFoundError('Felhasználó nem található.')
+       throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user.id} azonosítóval.`)
     }
     const book = await Book.findById(req.params.id)
     if(!book) {
-       throw new NotFoundError('Nem találtam a könyvet.')
+       throw new CustomError.NotFoundError(`Nem található könyv ${req.params.id} azonosítóval.`)
     }
  
     if(book.user.toString() !== req.user.id) {
-       throw new UnauthorizedError('Hiányzó jogosultság.')
+       throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
     }
  
     const updatedBook = await Book.findByIdAndUpdate(req.params.id,  {title, author, location, lang, images: req.files.length ? imagesObj : images }, {runValidators: true, new: true})
  
-    res.status(200).json(updatedBook)
+    res.status(StatusCodes.OK).json(updatedBook)
  }
 
 
@@ -62,18 +59,18 @@ const updateBook = async (req, res) => {
     const user = await User.findById(req.user.id)
  
     if(!user) {
-       throw new NotFoundError('Felhasználó nem található.')
+       throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user.id} azonosítóval.`)
     }
     const book = await Book.findById(req.params.id)
     let fileNames = []
     book.images.forEach(img => img.filename !== 'default' ? fileNames.push(img.filename) : fileNames = null)
  
     if(!book) {
-       throw new NotFoundError('Nem találtam a könyvet.')
+       throw new CustomError.NotFoundError(`Nem található könyv ${req.params.id} azonosítóval.`)
     }
  
     if(book.user.toString() !== req.user.id) {
-       throw new UnauthorizedError('Hiányzó jogosultság.')
+       throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
     }
 
     if(fileNames) {
@@ -82,7 +79,7 @@ const updateBook = async (req, res) => {
  
     await book.remove()
  
-    res.status(200).json({success: true})
+    res.status(StatusCodes.OK).json({success: true})
  }
  
 
@@ -95,10 +92,10 @@ const getBooks = async (req, res) => {
         .exec()
             
         if(!books) {
-            throw new NotFoundError('Nem találtunk könyveket.')
+            throw new CustomError.NotFoundError('Még nincsenek feltöltött könyvek.')
         } else {
         const count = await Book.countDocuments()
-            res.status(200).json({
+            res.status(StatusCodes.OK).json({
                 books,
                 totalPages: Math.ceil(count / limit),
                 currentPage: page
@@ -106,37 +103,36 @@ const getBooks = async (req, res) => {
     }
 }
 
-
 const getBook = async(req, res) => {
     const book = await Book.findById(req.params.id).populate({path: 'user', select: 'name'})
     if(!book) {
-        throw new NotFoundError('Nem találtam ilyen könyvet.')
+        throw new CustomError.NotFoundError(`Nem található könyv ${req.params.id} azonosítóval.`)
     }
-    res.status(200).json(book)
+    res.status(StatusCodes.OK).json(book)
 }
-
 
 
 const getAllBooksByLoggedInUser = async(req, res) => {
     const user = await User.findById(req.user._id)
 
     if(!user) {
-        throw new NotFoundError('Felhasználó nem található')
+        throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user._id} azonosítóval.`)
     }
     const books = await Book.find({user: req.user._id})
 
-    res.status(200).json(books)
+    res.status(StatusCodes.OK).json(books)
 }
+
 
 const getAllBooksByUser = async(req, res) => {
     const user = await User.findById(req.params.id)
 
     if(!user) {
-        throw new NotFoundError('Felhasználó nem található')
+        throw new CustomError.NotFoundError(`Nem található felhasználó ${req.params.id} azonosítóval.`)
     }
     const books = await Book.find({user: req.params.id})
 
-    res.status(200).json(books)
+    res.status(StatusCodes.OK).json(books)
 }
 
 
@@ -145,15 +141,15 @@ const searchBooks = async(req, res) => {
     const searchTerm = req.query.query
     const newReg = new RegExp(searchTerm, 'i')
     if(!searchTerm) {
-        throw new BadRequestError('A kereséshez írj valamit a keresőmezőbe!')
+        throw new CustomError.BadRequestError('A kereséshez írj valamit a keresőmezőbe!')
     }
     const books = await Book.find({ $or: [{ author: { '$regex': newReg } }, { title: { '$regex': newReg } }] })
-    if(books.length === 0) {
-        throw new NotFoundError('A keresés nem hozott eredményt.')
-    }
-    res.status(200).json(books)
-}
 
+    if(books.length === 0) {
+        throw new CustomError.NotFoundError('A keresés nem hozott eredményt.')
+    }
+    res.status(StatusCodes.OK).json(books)
+}
 
 
 module.exports = {

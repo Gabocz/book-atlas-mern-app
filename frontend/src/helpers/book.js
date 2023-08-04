@@ -92,7 +92,6 @@ export const fetchMyBooks = async (id, token) => {
   export const searchBooks = async (searchTerm) => {
     try {
       const res = await axios.get(API_URL + `search/?query=${searchTerm}`)
-      console.log(res.data)
       return res.data
     } catch(error) {
       console.log(error)

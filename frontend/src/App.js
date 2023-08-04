@@ -29,7 +29,7 @@ function App() {
       <UserContextProvider>
       <Router>
       <div className='container is-fluid'>
-      <Navbar setFoundBooks={setFoundBooks}/>
+      <Navbar setFoundBooks={setFoundBooks} setIsLoading={setIsLoading}/>
       <Routes>
         <Route path='/' element={<Home setIsLoading={setIsLoading} isLoading={isLoading} />} />
         <Route path='books/:id' element={<Book setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
@@ -45,7 +45,7 @@ function App() {
         <Route path='/users/my-profile' element={<MyProfile setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
         </Route>
         <Route path='/users/:id' element={<UserProfile setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
-        <Route path='/books/search-results' element={<SearchResults foundBooks={foundBooks}/>}>
+        <Route path='/books/search-results' element={<SearchResults foundBooks={foundBooks} isLoading={isLoading}/>}>
         </Route>
         <Route path='*' element={<NotFound/>}></Route>
       </Routes>

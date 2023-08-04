@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { authorize } = require('../middleware/Auth')
+const authenticateUser = require('../middleware/Auth')
 const multer = require('multer')
 const { sendUploadToGCS } = require('../middleware/upload')
 const storage = multer.memoryStorage()
@@ -22,10 +22,10 @@ const {
 
 
 
-router.route('/').post(authorize, upload.array('image', 3), sendUploadToGCS, registerBook).get(getBooks)
+router.route('/').post(authenticateUser, upload.array('image', 3), sendUploadToGCS, registerBook).get(getBooks)
 router.route('/search').get(searchBooks)
 router.route('/user/:id').get(getAllBooksByUser)
-router.route('/user/:id').get(authorize, getAllBooksByLoggedInUser).put(authorize, updateBook)
-router.route('/:id').get(getBook).put(authorize, upload.array('image', 3), sendUploadToGCS, updateBook).delete(authorize, deleteBook)
+router.route('/user/:id').get(authenticateUser, getAllBooksByLoggedInUser).put(authenticateUser, updateBook)
+router.route('/:id').get(getBook).put(authenticateUser, upload.array('image', 3), sendUploadToGCS, updateBook).delete(authenticateUser, deleteBook)
 
 module.exports = router

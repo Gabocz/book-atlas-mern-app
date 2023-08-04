@@ -6,7 +6,7 @@ import { UserContext } from '../context/UserContext'
 import { searchBooks} from './/../helpers/book'
 
 
-function Navbar({setFoundBooks}) {
+function Navbar({setFoundBooks, setIsLoading}) {
 
   const [isActive, setIsActive] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -31,15 +31,18 @@ function Navbar({setFoundBooks}) {
     if(!searchTerm) {
       return toast.error('A kereséshez írj valamit a keresőmezőbe.')
     }
+    setIsLoading(true)
     await searchBooks(searchTerm).then(data => {
       if(data) {
         setFoundBooks(data)
         navigate('books/search-results')
         setSearchTerm('')
+        setIsLoading(false)
       } else {
         setFoundBooks([])
         navigate('books/search-results')
         setSearchTerm('')
+        setIsLoading(false)
       }
     })
   }

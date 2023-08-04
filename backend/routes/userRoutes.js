@@ -7,11 +7,12 @@ const {
     updateUser,
     getUser,
 } = require('../controllers/userController')
-const { authorize } = require('../middleware/Auth')
+const authenticateUser = require('../middleware/Auth')
+
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
-router.route('/:id').put(authorize, updateUser)
+router.route('/:id').put(authenticateUser, updateUser)
 router.route('/:id').get(getUser)
 
 

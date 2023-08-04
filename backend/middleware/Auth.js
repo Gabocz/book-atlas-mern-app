@@ -1,8 +1,8 @@
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
-const UnauthorizedError = require('../../errors/unauthorized')
+const CustomError = require('../../errors')
 
-const authorize = async (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
     const authHeader = req.headers.authorization
     let token
 
@@ -17,12 +17,12 @@ const authorize = async (req, res, next) => {
             req.user = user
         next()
         } catch (error) {
-          throw new UnauthorizedError('Hiányzó jogosultság.')
+          throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
         }
     }
     if(!token) {
-          throw new UnauthorizedError('Hiányzó jogosultság.')
+        throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
     }
 }
 
-module.exports = { authorize }
+module.exports = authenticateUser

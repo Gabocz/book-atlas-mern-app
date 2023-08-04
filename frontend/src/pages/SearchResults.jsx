@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom'
+import Spinner from '../components/Spinner'
 
 const API_URL = '/books/'
 
-function SearchResults({foundBooks}) {
+function SearchResults({foundBooks, isLoading}) {
+
+  if(isLoading) {
+    return <Spinner/>
+  }
+  
     return (
         <div className="column">
           {foundBooks.length > 0 ? (
