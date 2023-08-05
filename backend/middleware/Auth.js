@@ -25,4 +25,16 @@ const authenticateUser = async (req, res, next) => {
     }
 }
 
-module.exports = authenticateUser
+    const authorizeUser = (...roles) => {
+        return (req, res, next) => {
+            if(!roles.includes(req.user.role)) {
+              throw new CustomError.UnauthorizedError('Hozzáférés megtagadva.')
+            }
+            next()
+        }
+    }
+
+module.exports = {
+    authenticateUser,
+    authorizeUser
+}

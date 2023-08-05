@@ -25,10 +25,11 @@ const UserSchema = mongoose.Schema({
         required: [true, 'Kérlek, add meg a jelszavad.'],
         minLength: [6, 'A jelszó túl rövid.'],
     }, 
-    isAdmin: {
-        type: Boolean,
-        required: true, 
-        default: false
+    role: {
+        type: String,
+        required: true,
+        enum: ['admin', 'user'],
+        default: 'user'
     }
 },
 {

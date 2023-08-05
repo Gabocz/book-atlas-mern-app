@@ -9,16 +9,21 @@ const registerUser = async(req, res) => {
     throw new CustomError.BadRequestError('Add meg a neved, az e-mail címed és a jelszavad.')
   }
 
+  const emailAlreadyExists = await User.findOne({email})
+  if(emailAlreadyExists) {
+    throw new CustomError.BadRequestError(`A(z) ${email} címmel már létezik felhasználó. Jelentkezz be vagy haszználj másik email címet.`)
+  }
+
   const isFirstAccount = await User.countDocuments({}) === 0
-  const isAdmin = isFirstAccount
+  const role = isFirstAccount ? 'admin' : 'user'
 
-  const user = await User.create({ name, email, password, isAdmin })
+  const user = await User.create({ name, email, password, role })
 
-  res.status(StatusCodes.CREATED).json({
+  res.status(StatusCodes.CREATED).json({ 
       id: user._id, 
       name: user.name,
       email: user.email,
-      token: user.createJWT()
+      token: user.createJWT()  
   })
 }
 
@@ -79,6 +84,8 @@ const updateUser = async(req, res) => {
       token: updatedUser.createJWT()
     })
 }
+
+
       
 
 const getUser = async(req, res) =>  {
@@ -89,12 +96,18 @@ const getUser = async(req, res) =>  {
   res.status(StatusCodes.OK).json(user)
 }
 
+const getAllUsers = async(req, res) =>  {
+  const users = await User.find({role: 'user'})  .select('-password')  
+  res.status(StatusCodes.OK).json({users})
+}
+
 
 module.exports = {
   registerUser,
   loginUser,
   updateUser,
-  getUser
+  getUser,
+  getAllUsers,
 }
 
 

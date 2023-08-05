@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const authenticateUser = require('../middleware/Auth')
+const { authenticateUser } = require('../middleware/Auth')
 const multer = require('multer')
 const { sendUploadToGCS } = require('../middleware/upload')
 const storage = multer.memoryStorage()
