@@ -15,7 +15,6 @@ const UserContextProvider = ({ children }) => {
     }
     fetchUser()
   }, [])
-
   
   const registerUser = async (userData) => {
     try {
@@ -26,7 +25,8 @@ const UserContextProvider = ({ children }) => {
      }
      return response.data
     } catch (error) {
-    console.log(error)
+      console.log(error)
+      return error
   }
 }
 
@@ -48,10 +48,11 @@ const UserContextProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(loggedInUser))
         setUser(loggedInUser)
       }
-       return response.data
-    } catch (error) {
-    console.log(error)
-    }
+      return response.data
+      } catch (error) {
+        console.log(error)
+        return error
+      }
   }
 
   

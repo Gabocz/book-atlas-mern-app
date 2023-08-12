@@ -11,7 +11,7 @@ function Profile({ setIsLoading, isLoading }) {
 
     const {user} = useContext(UserContext)
     const { updateUser } = useContext(UserContext)
-    const { token, id, } = user
+    const { token, id } = user
 
     const [formData, setFormData] = useState({
         name: user.name, 
@@ -47,17 +47,17 @@ function Profile({ setIsLoading, isLoading }) {
         return
       }
       setIsLoading(true)
-        await updateUser(formData).then(data => { 
-          if(data) {
-            toast.success('Módosítottad az adataidat.')
-            setChangeDetails(false)
+      await updateUser(formData).then(res => { 
+        if(res.name === 'AxiosError') {
+          toast.error(res.response.data.msg)
             setIsLoading(false)
-            } else {
-              toast.error('Adataid nem változtak.')
-              setIsLoading(false)
-              }
-        })
-  }
+            return
+        }
+        toast.success('Sikeres adatmódosítás.')
+        setChangeDetails(false)
+        setIsLoading(false)
+  })
+}
 
   if(isLoading) {
     return <Spinner/>

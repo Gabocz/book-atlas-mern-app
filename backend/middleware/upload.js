@@ -61,7 +61,7 @@ const sendUploadToGCS = (req, res, next) => {
     .catch(next);
 }
 
-const deleteFileFromGCS = async (fileNames) => {
+const deleteFilesFromGCS = async (fileNames) => {
   let promises = []
   fileNames.forEach(fileName => {
     const promise = new Promise(async (resolve, reject) => {
@@ -86,5 +86,5 @@ const deleteFileFromGCS = async (fileNames) => {
 
 module.exports = {
   sendUploadToGCS,
-  deleteFileFromGCS
+  deleteFilesFromGCS
 }

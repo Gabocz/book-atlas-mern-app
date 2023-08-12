@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const CustomError = require('../../errors')
+const checkUserPermissions = require('../utils/checkUserPermissions')
 const { StatusCodes } = require('http-status-codes')
 
 const registerUser = async(req, res) => {
@@ -11,7 +12,7 @@ const registerUser = async(req, res) => {
 
   const emailAlreadyExists = await User.findOne({email})
   if(emailAlreadyExists) {
-    throw new CustomError.BadRequestError(`A(z) ${email} címmel már létezik felhasználó. Jelentkezz be vagy haszználj másik email címet.`)
+    throw new CustomError.BadRequestError(`A(z) ${email} címmel már létezik felhasználó. Jelentkezz be vagy használj másik email címet.`)
   }
 
   const isFirstAccount = await User.countDocuments({}) === 0
@@ -57,7 +58,6 @@ const loginUser = async(req, res) => {
 
 const updateUser = async(req, res) => {
   const { name, email }  = req.body
-  
   if(!name || !email) {
     throw new CustomError.BadRequestError('Add meg az email címed és a neved.')
   }
@@ -72,9 +72,7 @@ const updateUser = async(req, res) => {
       throw new CustomError.BadRequestError('Az adatok nem változtak.')
   }
 
-  if(foundUser._id.toString() !== req.user.id) {
-    throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')
-  }
+  checkUserPermissions(req.user, foundUser)
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {new: true})
     res.status(StatusCodes.OK).json({
@@ -88,7 +86,7 @@ const updateUser = async(req, res) => {
 
       
 
-const getUser = async(req, res) =>  {
+const getSingleUser = async(req, res) =>  {
   const user = await User.findById(req.params.id)
   if(!user) {
     throw new CustomError.NotFoundError(`Nem található felhasználó ${req.params.id} azonosítóval.`)
@@ -106,7 +104,7 @@ module.exports = {
   registerUser,
   loginUser,
   updateUser,
-  getUser,
+  getSingleUser,
   getAllUsers,
 }
 

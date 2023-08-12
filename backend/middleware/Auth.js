@@ -12,9 +12,11 @@ const authenticateUser = async (req, res, next) => {
             token = authHeader.split(' ')[1]
             // verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            const testUser = decoded.userId === '64d669a4c0a4f61936a0d135'
             // get user from token
             const user = await User.findById(decoded.userId).select('-password')
             req.user = user
+            req.user.testUser = testUser
         next()
         } catch (error) {
           throw new CustomError.UnauthenticatedError('Érvénytelen hitelesítés.')

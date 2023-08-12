@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/BackButton'
-import { FaEnvelope, FaSignInAlt } from 'react-icons/fa'
+import { FaEnvelope, FaSignInAlt, FaRegUser } from 'react-icons/fa'
 import { UserContext } from '../context/UserContext'
 import { toast } from 'react-toastify'
 
@@ -101,15 +101,21 @@ function Login() {
                     />
                   </div>
             </div>
-            <div className="field is-fullwidth mt-5">
+            <div className="field is-fullwidth mt-4">
                 <div className="control">
-                  <button className="button is-outlined is-link is-responsive">
+                  <button className="button is-outlined is-dark is-responsive">
                     <span className="icon"><FaSignInAlt/></span>
                     <span>Belépek</span>
                     </button>
                 </div>
             </div>
             </form>
+            <div className='mt-4'>
+              <button className="button is-responsive">
+                <span className="icon"><FaRegUser/></span>
+                <span>Demó</span>
+              </button>
+            </div>
           </section>
           </div>
     )

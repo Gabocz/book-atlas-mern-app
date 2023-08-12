@@ -8,7 +8,7 @@ const UserSchema = mongoose.Schema({
     name: {
         type: String, 
         required: [true, 'Kérlek, add meg a neved.'],
-        minLength: [4, 'A felhasználónév nem lehet rövidebb 4 karakternél'],
+        minLength: [3, 'A felhasználónév nem lehet rövidebb 3 karakternél'],
         maxLength: [50, 'A felhasználónév nem lehet hosszabb 50 karakternél'],
     },
     email: {

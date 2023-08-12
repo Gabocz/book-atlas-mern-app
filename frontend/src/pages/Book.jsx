@@ -9,6 +9,8 @@ import BackButton from '../components/BackButton'
 import { fetchBook, deleteBook } from '../helpers/book'
 import Spinner from '../components/Spinner'
 import BookCard from '../components/BookCard'
+import { axiosError } from '../helpers/axiosError'
+
 
 
 function Book({isLoading, setIsLoading}) {
@@ -25,17 +27,19 @@ function Book({isLoading, setIsLoading}) {
     useEffect(() => {
           (async () => {
               setIsLoading(true)
-              const book = await fetchBook(params.id)
-              if(book) {
-              const { geolocation } = book
-              setBook(book)
-              setMapCenter(geolocation)
-              setIsLoading(false)
-              } else {
+              await fetchBook(params.id).then(res => {
+
+                if(axiosError(res)) {
+                  setIsLoading(false)
+                  navigate('/*', {replace: true})
+                  return
+                }
+
+                setBook(res)
+                const { geolocation } = res
+                setMapCenter(geolocation)
                 setIsLoading(false)
-                navigate('/*', {replace: true})
-                toast.error('A keresett azonosítóval nem találtam könyvet.')
-              }           
+              })       
           })()
         }, [params.id, setIsLoading, navigate]) 
 
@@ -43,14 +47,17 @@ function Book({isLoading, setIsLoading}) {
     const handleDelete = async () => {
       setIsLoading(true)
       if(window.confirm('Biztosan törölni szeretnéd ezt a könyvet?')) {
-        await deleteBook(params.id, user.token)
-        toast.success('Sikeres törlés.')
-        setIsLoading(false)
-        navigate(`/users/my-profile`)
-        } else {
+        await deleteBook(params.id, user.token).then(res => {
+          if(axiosError(res)) {
+            setIsLoading(false)
+            toast.error(res.errorMessage)
+            return
+          }
+          toast.success('Sikeres törlés.')
           setIsLoading(false)
-          return
-        }
+          navigate(`/users/my-profile`)
+        })
+      } 
     }
     
     if(isLoading) {

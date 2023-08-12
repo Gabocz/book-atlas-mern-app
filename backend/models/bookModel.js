@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const getGeoLocation = require('../utils/geolocation')
+const { deleteFilesFromGCS } = require('../middleware/upload')
 
 const ImageSchema = new mongoose.Schema({
     url: {
@@ -51,6 +52,16 @@ const BookSchema = mongoose.Schema({
 
 BookSchema.pre('save', async function () {
    this.geolocation = await getGeoLocation(this.location)
+})
+
+
+BookSchema.pre('remove', async function () {
+    const filenames = []
+    for(let image of this.images) {
+        if(image.filename === 'default') return
+        filenames.push(image.filename)
+    }
+    await deleteFilesFromGCS(filenames)
 })
 
 module.exports = mongoose.model('Book', BookSchema)

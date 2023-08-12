@@ -9,6 +9,7 @@ export const fetchBook = async (id) => {
       return res.data
     } catch (error) {
       console.log(error)
+      return error
     }  
 }
 
@@ -18,11 +19,13 @@ export const deleteBook = async (id, token) => {
     Authorization: `Bearer ${token}`
       }
     }
-    try {
-      await axios.delete(API_URL + id, config)
+  try {
+    await axios.delete(API_URL + id, config)
+    return 'Sikeres törlés.'
     } catch (error) {
       console.log(error)
-     }
+      return error
+    }
   }
     
 
@@ -37,6 +40,7 @@ export const deleteBook = async (id, token) => {
       return res.data 
     } catch (error) {
       console.log(error)
+      return error
     }
   }
 

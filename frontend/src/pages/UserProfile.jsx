@@ -5,6 +5,7 @@ import { getUserById } from '../helpers/user'
 import { useParams } from 'react-router-dom'
 import BackButton from '../components/BackButton'
 import UserUploads from '../components/UserUploads'
+import { toast } from 'react-toastify'
 
 function UserProfile({ isLoading, setIsLoading }) {
 
@@ -17,6 +18,11 @@ function UserProfile({ isLoading, setIsLoading }) {
             setIsLoading(true)
             const user = await getUserById(params.id)
             setUser(user)
+            if(!user) {
+              toast.error(`A keresett azonosítóval felhasználó nem található.`)
+              setIsLoading(false)
+              return
+            }
             const books = await fetchAllBooksByUser(user._id)
             setUsersBooks(books)
             setIsLoading(false)
@@ -28,7 +34,7 @@ function UserProfile({ isLoading, setIsLoading }) {
     }
 
     return (
-      user && (
+      user ? (
         <div className="column">
           <header className="message">
             <div className="message-header">
@@ -40,7 +46,8 @@ function UserProfile({ isLoading, setIsLoading }) {
             <BackButton/>      
           </main>
         </div> 
-      )
+      ) : 
+      <BackButton/>
     )
 }
 

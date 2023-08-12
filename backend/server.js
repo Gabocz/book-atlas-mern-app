@@ -16,12 +16,14 @@ const connectDB = require('./dbConfig');
 connectDB()
 const app = express()
 
+app.set('trust proxy', 1)
+
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: true }))
 
 app.use(rateLimiter({
     windowMs: 15 * 60 * 1000,
-    max: 30
+    max: 100
 }))
 
 app.use(cors())

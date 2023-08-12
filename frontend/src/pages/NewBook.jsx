@@ -7,6 +7,7 @@ import { addBook } from '../helpers/book'
 import { UserContext } from '../context/UserContext'
 import Spinner from '../components/Spinner'
 import ButtonGroup from '../components/ButtonGroup'
+import { axiosError } from '../helpers/axiosError'
 
 
 function NewBook({ setIsLoading, isLoading }) {
@@ -51,17 +52,19 @@ function NewBook({ setIsLoading, isLoading }) {
       bookData.append("title", title)
       bookData.append("location", location)
       bookData.append("lang", lang) 
-      await addBook(token, bookData).then(data => {
-        if(data) {
-          navigate('/')
-          toast.success('Sikeres feltöltés')
-            setIsLoading(false)
-            } else {
-                toast.error('Nem sikerült a feltöltés. Próbáld újra.')
-                setIsLoading(false)
-              }
-            }
-          )  
+
+      await addBook(token, bookData).then(res => {
+
+        if(axiosError(res)) {
+          toast.error(`Hiba! ${res.errorMessage}`)
+          setIsLoading(false)
+          return
+        }
+        
+        navigate('/')
+        toast.success('Sikeres feltöltés')
+        setIsLoading(false)
+        })  
       }
       
 
