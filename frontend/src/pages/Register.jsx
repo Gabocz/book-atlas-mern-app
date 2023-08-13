@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { FaUser, FaRegUser, FaEnvelope, FaCheck } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
@@ -152,6 +152,9 @@ function Register({ setIsLoading, isLoading }) {
                 </div>
             </div>
             </form>
+            <div className='mt-4'>
+              <Link className='is-underlined' to='/login'>Regisztráltál már? Lépj be!</Link>
+            </div>
           </section>
           </div>
     )

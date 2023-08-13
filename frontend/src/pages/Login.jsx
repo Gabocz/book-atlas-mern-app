@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import BackButton from '../components/BackButton'
-import { FaEnvelope, FaSignInAlt, FaRegUser } from 'react-icons/fa'
+import { FaEnvelope, FaSignInAlt } from 'react-icons/fa'
 import { UserContext } from '../context/UserContext'
 import { toast } from 'react-toastify'
 
@@ -109,18 +109,14 @@ function Login() {
                     </button>
                 </div>
             </div>
-            </form>
-            <div className='mt-4'>
-              <button className="button is-responsive">
-                <span className="icon"><FaRegUser/></span>
-                <span>Demó</span>
-              </button>
-            </div>
-          </section>
+          </form>
+          <div className='mt-4'>
+            <Link className='is-underlined has-text-dark' to='/register'>Nincs még fiókod? Regisztrálj!</Link>
           </div>
+        </section>
+        </div>
     )
 }
-
 
 
 export default Login

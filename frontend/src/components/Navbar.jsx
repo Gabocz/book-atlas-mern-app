@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../context/UserContext'
 import { searchBooks} from './/../helpers/book'
+import TestUserLogin from './TestUserLogin'
 
 
 function Navbar({setFoundBooks, setIsLoading}) {
@@ -120,6 +121,7 @@ function Navbar({setFoundBooks, setIsLoading}) {
                   <Link to='/login' className="button is-dark is-outlined is-responsive">
                     Bejelentkezés
                   </Link>
+                  <TestUserLogin/>
                 </div>
               </div>
             </div>
