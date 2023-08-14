@@ -9,7 +9,7 @@ const rateLimiter = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const PORT = process.env.PORT || 8000
 const errorHandlerMiddleware = require('./middleware/ErrorMiddleware')
-const notFoundMiddleware = require("./middleware/NotFound");
+const notFoundMiddleware = require('./middleware/NotFound');
 
 const connectDB = require('./dbConfig');
 

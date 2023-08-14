@@ -1,4 +1,4 @@
-const CustomError = require('../../errors')
+const CustomError = require('../errors')
 
 const testUser = (req, res, next) =>{
     if(req.user.testUser) {
