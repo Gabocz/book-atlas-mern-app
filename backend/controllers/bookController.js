@@ -17,7 +17,7 @@ const registerBook = async (req, res) => {
     throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user.id} azonosítóval.`)
   }
 
-  const book = await Book.create({
+  const book = await Book({
     title, 
     author, 
     location, 
@@ -25,6 +25,8 @@ const registerBook = async (req, res) => {
     images: req.files.length? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject })) : {url: undefined, filename: undefined}, 
     user: req.user.id
   })
+
+  await book.save()
 
   res.status(StatusCodes.CREATED).json(book)
 }

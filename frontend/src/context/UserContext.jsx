@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios'
 
-const API_URL = '/users/'
+const API_URL = 'https://quantumbook.onrender.com/users/'
 
 const UserContext = createContext()
 

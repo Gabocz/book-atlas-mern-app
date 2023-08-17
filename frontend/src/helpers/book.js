@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-const API_URL = '/books/'
+const API_URL = 'https://quantumbook.onrender.com/books/'
 
 export const fetchBook = async (id) => {
     try {
