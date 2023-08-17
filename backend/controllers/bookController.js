@@ -18,7 +18,7 @@ const registerBook = async (req, res) => {
     throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user.id} azonosítóval.`)
   }
 
-  const geolocation = await getGeoLocation(location)
+  const geolocation = await getGeolocation(location)
 
   const book = await Book({
     title, 
