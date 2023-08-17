@@ -19,6 +19,7 @@ const registerBook = async (req, res) => {
   }
 
   const geolocation = await getGeoLocation(location)
+  console.log(geolocation)
 
   const book = await Book({
     title, 
