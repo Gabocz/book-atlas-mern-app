@@ -2,7 +2,7 @@ const Book = require('../models/bookModel')
 const User = require('../models/userModel')
 const CustomError = require('../errors')
 const checkUserPermissions = require('../utils/checkUserPermissions')
-const getGeolocation = require('../utils/geolocation')
+const getGeoLocation = require('../utils/geolocation')
 const { StatusCodes } = require('http-status-codes')
 
 const registerBook = async (req, res) => {
@@ -18,7 +18,7 @@ const registerBook = async (req, res) => {
     throw new CustomError.NotFoundError(`Nem található felhasználó ${req.user.id} azonosítóval.`)
   }
 
-  const geolocation = await getGeolocation(location)
+  const geolocation = await getGeoLocation(location)
 
   const book = await Book({
     title, 
