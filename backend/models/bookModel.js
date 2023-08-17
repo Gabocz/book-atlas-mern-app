@@ -50,9 +50,9 @@ const BookSchema = mongoose.Schema({
    timestamps: true,
 })
 
-// BookSchema.pre('save', async function () {
-//    this.geolocation = await getGeoLocation(this.location)
-// })
+BookSchema.pre('save', async function () {
+   this.geolocation = await getGeoLocation(this.location)
+})
 
 
 BookSchema.pre('remove', async function () {
