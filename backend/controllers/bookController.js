@@ -19,13 +19,12 @@ const registerBook = async (req, res) => {
   }
 
   const geolocation = await getGeoLocation(location)
-  console.log(geolocation)
 
   const book = await Book({
     title, 
     author, 
     location,
-    geolocation, 
+    geolocation: geolocation, 
     lang, 
     images: req.files.length? req.files.map(f => ({ url: f.cloudStoragePublicUrl, filename: f.cloudStorageObject })) : {url: undefined, filename: undefined}, 
     user: req.user.id
