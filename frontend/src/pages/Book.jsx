@@ -91,7 +91,7 @@ function Book({isLoading, setIsLoading}) {
                   <a className="button is-success is-responsive"
                     href={user ? `mailto: ${book.user.email}?Subject=${book.author + ': ' + book.title}` : '/login'}
                     >
-                      Kapcsolatfelvétel a feltöltővel
+                      Kapcsolatfelvétel
                   </a>
                     )}
                 </p>
