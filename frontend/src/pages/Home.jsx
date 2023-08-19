@@ -38,7 +38,7 @@ function Home({ setIsLoading, isLoading }) {
             </Link>
           </div>
           )): (
-            <p>Nem találtam könyveket.</p>
+            <p>Még nincsenek feltöltött könyvek.</p>
         )}  
       </div> 
       <Pagination totalPages={totalPages} paginate={paginate} />

@@ -1,7 +1,7 @@
 {
-  "name": "simplebook",
+  "name": "book-atlas",
   "version": "1.0.0",
-  "description": "Simple Book app",
+  "description": "BookAtlas app",
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
