@@ -85,6 +85,21 @@ function Navbar({setFoundBooks, setIsLoading}) {
            {user ? (
             <>
             <div className="navbar-end">
+              <div className="navbar-item">
+                <div className="buttons">
+                  <Link to="/about" className="button is-light">
+                    <span className='is-underlined'>Rólunk</span>
+                  </Link>
+                </div>
+              </div>
+              <div className="navbar-item">
+                <div className="buttons">
+                  <Link to="/new-book" className="button is-light">
+                    <span className="icon"><FaUpload/></span> 
+                    <span>Könyvfeltöltés</span>
+                  </Link>
+                </div>
+              </div>
               <div className='navbar-item'>
                 <div className="buttons">
                   <Link to={`/users/my-profile`} className="button is-light is-active">
@@ -95,17 +110,9 @@ function Navbar({setFoundBooks, setIsLoading}) {
               </div>
               <div className="navbar-item">
                 <div className="buttons">
-                  <Link to="/new-book" className="button is-light">
-                    <span className="icon"><FaUpload/></span> 
-                    <span>Új könyv feltöltése</span>
-                  </Link>
-                </div>
-              </div>
-              <div className="navbar-item">
-                <div className="buttons">
                   <button onClick={onLogout} className="button is-light">
                     <span className="icon"><FaSignOutAlt/></span>
-                    <span>Kijelentkezés</span>
+                    <span>Kilépés</span>
                   </button>
                 </div>
               </div>

@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import About from './pages/About'
 import NewBook from './pages/NewBook'
 import MyProfile from './pages/MyProfile'
 import UserProfile from './pages/UserProfile'
@@ -38,6 +39,7 @@ function App() {
         </Route>
         <Route path='/login' element={<Login/>} />
         <Route path='/register' element={<Register setIsLoading={setIsLoading} isLoading={isLoading}/>} />
+        <Route path='/about' element={<About/>} />
         <Route path='/new-book' element={<PrivateRoute/>}>
         <Route path='/new-book' element={<NewBook setIsLoading={setIsLoading} isLoading={isLoading}/>}/>
         </Route>
