@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 
-function UserUploads({user, usersBooks}) {
+function UserUploads({usersBooks}) {
     return (
         <section className="panel mt-3">
               <h3 className="panel-heading is-size-5-mobile">Feltöltések:</h3>
