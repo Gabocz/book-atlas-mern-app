@@ -41,7 +41,7 @@ function Home({ setIsLoading, isLoading }) {
             <p>Még nincsenek feltöltött könyvek.</p>
         )}  
       </div> 
-      <Pagination totalPages={totalPages} paginate={paginate} />
+      <Pagination totalPages={totalPages} paginate={paginate} currentPage={currentPage}/>
     </>
  
   )}

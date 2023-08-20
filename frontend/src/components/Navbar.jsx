@@ -122,6 +122,13 @@ function Navbar({setFoundBooks, setIsLoading}) {
             <div className="navbar-end">
               <div className="navbar-item">
                 <div className="buttons">
+                  <Link to="/about" className="button is-light">
+                    <span className='is-underlined'>Rólunk</span>
+                  </Link>
+                </div>
+              </div>
+              <div className="navbar-item">
+                <div className="buttons">
                   <Link to='/register' className="button is-dark is-outlined is-responsive">
                   <span>Regisztráció</span>
                   </Link>
