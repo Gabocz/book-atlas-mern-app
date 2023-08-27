@@ -1,22 +1,43 @@
-import { Link } from 'react-router-dom'
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
+function UserUploads({ profileUser, usersBooks }) {
+  const { user } = useContext(UserContext);
 
-function UserUploads({usersBooks}) {
-    return (
-        <section className="panel mt-3">
-              <h3 className="panel-heading is-size-5-mobile">Feltöltések:</h3>
-              {usersBooks.length > 0 ? (
-                <ul>
-                  {usersBooks.map(book => (
-                    <Link key={book._id} to={'/books/' + book._id} className="panel-block">
-                      <p className='is-size-7-mobile'>{book.author}: {book.title}</p>
-                    </Link>
-                  ))}
-                </ul>
-                ) : <p className="is-size-6-mobile">Még nincsenek feltöltött könyvek.</p>
-              }
-            </section>
-    )
+  return (
+    <div className="panel">
+      <h3 className="panel-heading">
+        {user.id === profileUser.id ? "Feltöltéseim:" : "Feltöltései:"}
+      </h3>
+      {usersBooks.length > 0 ? (
+        <>
+          <ul>
+            {usersBooks.map((book) => (
+              <Link
+                key={book._id}
+                to={"/books/" + book._id}
+                className="panel-block"
+              >
+                <p>
+                  {book.author}: {book.title}
+                </p>
+              </Link>
+            ))}
+          </ul>
+          <div className="panel-block">
+            <button className="button is-link is-outlined is-fullwidth">
+              Következő
+            </button>
+          </div>
+        </>
+      ) : (
+        <p className="panel-block is-size-6-mobile">
+          Még nincsenek feltöltött könyvek.
+        </p>
+      )}
+    </div>
+  );
 }
 
-export default UserUploads
+export default UserUploads;

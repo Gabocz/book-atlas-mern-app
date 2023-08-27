@@ -1,16 +1,17 @@
-import { FaReply } from "react-icons/fa"
-import { Link, useNavigate } from 'react-router-dom'
+import { FaReply } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 function BackButton() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
-
-    return (
-        <Link onClick={() => navigate(-1)} className="button is-info is-outlined is-responsive">
-            <span className="icon"><FaReply/></span> 
-            <span>Vissza</span>
-        </Link>
-    )
+  return (
+    <Link onClick={() => navigate(-1)} className="button is-info is-outlined">
+      <span className="icon">
+        <FaReply />
+      </span>
+      <span>Vissza</span>
+    </Link>
+  );
 }
 
-export default BackButton
+export default BackButton;
