@@ -1,7 +1,10 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL + "/users/";
+const API_URL =
+  process.env.REACT_APP_ENVIRONMENT === "development"
+    ? "/users/"
+    : process.env.REACT_APP_API_URL + "/users/";
 
 const UserContext = createContext();
 
@@ -65,6 +68,7 @@ const UserContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       setUser(null);
+      return error;
     }
   };
 
