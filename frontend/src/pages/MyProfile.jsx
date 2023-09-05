@@ -51,6 +51,7 @@ function Profile({ setIsLoading, isLoading }) {
       if (res.name === "AxiosError") {
         toast.error(res.response.data.msg);
         setChangeDetails(false);
+        setFormData({ name: user.name, email: user.email });
         setIsLoading(false);
         return;
       }

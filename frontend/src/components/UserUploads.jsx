@@ -32,9 +32,7 @@ function UserUploads({ profileUser, usersBooks }) {
           </div>
         </>
       ) : (
-        <p className="panel-block is-size-6-mobile">
-          Még nincsenek feltöltött könyvek.
-        </p>
+        <p className="panel-block">Még nincsenek feltöltött könyvek.</p>
       )}
     </div>
   );

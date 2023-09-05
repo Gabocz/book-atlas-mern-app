@@ -42,7 +42,10 @@ const loginUser = async (req, res) => {
     );
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate({
+    path: "wishlist",
+    select: "author title",
+  });
 
   if (!user) {
     throw new CustomError.UnauthenticatedError("Érvénytelen hitelesítés.");
@@ -58,12 +61,12 @@ const loginUser = async (req, res) => {
     id: user._id,
     name: user.name,
     email: user.email,
+    wishlist: user.wishlist,
     token: user.createJWT(),
   });
 };
 
 const updateUser = async (req, res) => {
-  console.log("UPDATING USER BE");
   const { name, email } = req.body;
   if (!name || !email) {
     throw new CustomError.BadRequestError("Add meg az email címed és a neved.");
@@ -95,27 +98,43 @@ const updateUser = async (req, res) => {
 };
 
 const addBookToMyWishlist = async (req, res) => {
-  const { id: bookId } = req.body;
-  const book = Book.findById(bookId);
+  const { bookId } = req.body;
+  const book = await Book.findById(bookId);
   if (!book) {
     throw new CustomError.NotFoundError(
       `Nem található könyv ${bookId} azonosítóval.`
     );
   }
-  const user = await User.findById(req.user.id);
-  if (user.wishlist.includes(bookId)) {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    throw new CustomError.NotFoundError(
+      `Nem található felhasználó ${req.params.id} azonosítóval.`
+    );
+  }
+
+  if (user._id.toString() !== req.user.id) {
+    throw new CustomError.UnauthorizedError("Hozzáférés megtagadva!");
+  }
+
+  if (user.wishlist.includes(bookId) || book.wishlistedBy.includes(user._id)) {
     throw new CustomError.BadRequestError(
       "Ezt a könyvet már kívánságlistáztad!"
     );
   }
   user.wishlist.push(bookId);
+  book.wishlistedBy.push(user._id);
   await user.save();
+  await book.save();
 
   res.status(StatusCodes.OK).json({ msg: "Könyv kívánságlistához adva!" });
 };
 
 const getSingleUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate({
+    path: "wishlist",
+    select: "author title",
+  });
   if (!user) {
     throw new CustomError.NotFoundError(
       `Nem található felhasználó ${req.params.id} azonosítóval.`
