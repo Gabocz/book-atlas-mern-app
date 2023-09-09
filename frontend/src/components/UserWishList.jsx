@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-function UserWishList({ profileUser, usersBooks }) {
+function UserWishList({ profileUser }) {
   const { user } = useContext(UserContext);
 
   return (
@@ -10,18 +10,24 @@ function UserWishList({ profileUser, usersBooks }) {
       <h3 className="panel-heading">
         {user.id === profileUser.id ? "Kívánságlistám:" : "Kivánságlistája: "}
       </h3>
-      <ul>
-        <Link className="panel-block">1 Könyv</Link>
-        <Link className="panel-block">2 Könyv</Link>
-        <Link className="panel-block">3 Könyv</Link>
-        <Link className="panel-block">4 Könyv</Link>
-        <Link className="panel-block">5 Könyv</Link>
-      </ul>
-      <div className="panel-block">
-        <button className="button is-link is-outlined is-fullwidth">
-          Következő
-        </button>
-      </div>
+      {profileUser.wishlist.length ? (
+        <>
+          <ul>
+            {profileUser.wishlist.map((wishlitedBook) => (
+              <Link key={wishlitedBook.id} className="panel-block">
+                {wishlitedBook.author}: {wishlitedBook.title}
+              </Link>
+            ))}
+          </ul>
+          <div className="panel-block">
+            <button className="button is-link is-outlined is-fullwidth">
+              Következő
+            </button>
+          </div>
+        </>
+      ) : (
+        <p className="panel-block">Nincsenek könyvek a kívánságlistán.</p>
+      )}
     </div>
   );
 }

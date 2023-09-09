@@ -111,6 +111,10 @@ const deleteBook = async (req, res) => {
 const getBooks = async (req, res) => {
   const { page = 1, limit = 8 } = req.query;
   const books = await Book.find()
+    .populate({
+      path: "wishlistedBy",
+      select: "_id",
+    })
     .limit(limit * 1)
     .skip((page - 1) * limit)
     .sort({ createdAt: -1 })
@@ -129,10 +133,15 @@ const getBooks = async (req, res) => {
 };
 
 const getBook = async (req, res) => {
-  const book = await Book.findById(req.params.id).populate({
-    path: "user",
-    select: "name",
-  });
+  const book = await Book.findById(req.params.id)
+    .populate({
+      path: "user",
+      select: "name",
+    })
+    .populate({
+      path: "wishlistedBy",
+      select: "_id",
+    });
   if (!book) {
     throw new CustomError.NotFoundError(
       `Nem található könyv ${req.params.id} azonosítóval.`
