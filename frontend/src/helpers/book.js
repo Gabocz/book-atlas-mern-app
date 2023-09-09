@@ -81,15 +81,6 @@ export const fetchMyBooks = async (id, token) => {
   }
 };
 
-export const fetchAllBooksByUser = async (id) => {
-  try {
-    const res = await axios.get(API_URL + "user/" + id);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const searchBooks = async (searchTerm) => {
   try {
     const res = await axios.get(API_URL + `search/?query=${searchTerm}`);

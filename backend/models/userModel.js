@@ -31,16 +31,8 @@ const UserSchema = mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    wishlist: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Book",
-      },
-    ],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 UserSchema.pre("save", async function () {

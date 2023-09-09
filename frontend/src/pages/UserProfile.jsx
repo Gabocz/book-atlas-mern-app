@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
-import { fetchAllBooksByUser } from "../helpers/book";
 import { getUserById } from "../helpers/user";
 import { useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
@@ -23,8 +22,7 @@ function UserProfile({ isLoading, setIsLoading }) {
         setIsLoading(false);
         return;
       }
-      const books = await fetchAllBooksByUser(user._id);
-      setUsersBooks(books);
+      setUsersBooks();
       setIsLoading(false);
     })();
   }, [params.id, setIsLoading]);

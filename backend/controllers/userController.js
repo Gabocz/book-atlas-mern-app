@@ -131,10 +131,14 @@ const addBookToMyWishlist = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  const user = await User.findById(req.params.id).populate({
-    path: "wishlist",
-    select: "author title",
-  });
+  const user = await User.findById(req.params.id)
+    .populate({
+      path: "wishlist",
+      select: "author title",
+    })
+    .populate({
+      path,
+    });
   if (!user) {
     throw new CustomError.NotFoundError(
       `Nem található felhasználó ${req.params.id} azonosítóval.`
