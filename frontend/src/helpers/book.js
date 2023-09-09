@@ -7,8 +7,8 @@ const API_URL =
 
 export const fetchBook = async (id) => {
   try {
-    const { data: book } = await axios.get(API_URL + id);
-    return book;
+    const res = await axios.get(API_URL + id);
+    return res.data;
   } catch (error) {
     console.log(error);
     return error;

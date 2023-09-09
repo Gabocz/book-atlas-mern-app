@@ -5,27 +5,12 @@ const API_URL =
     ? "/users/"
     : process.env.REACT_APP_API_URL + "/users/";
 
-export const getUserById = async (userId) => {
+export const getUserById = async (id) => {
   try {
-    const res = await axios.get(API_URL + userId);
+    const res = await axios.get(API_URL + id);
     const foundUser = res.data;
     return foundUser;
   } catch (err) {
     console.log(err);
-  }
-};
-
-export const addBookToWishlist = async (userId, token, bookId) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  try {
-    const res = await axios.post(API_URL + userId, { bookId: bookId }, config);
-    return res.data;
-  } catch (err) {
-    console.log(err);
-    return err;
   }
 };
