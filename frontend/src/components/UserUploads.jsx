@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 
-function UserUploads({ profileUser, usersBooks }) {
+function UserUploads({ profileUser, userUploads }) {
   const { user } = useContext(UserContext);
 
   return (
@@ -10,13 +10,13 @@ function UserUploads({ profileUser, usersBooks }) {
       <h3 className="panel-heading">
         {user.id === profileUser.id ? "Feltöltéseim:" : "Feltöltései:"}
       </h3>
-      {usersBooks.length > 0 ? (
+      {userUploads.length > 0 ? (
         <>
           <ul>
-            {usersBooks.map((book) => (
+            {userUploads.map((book) => (
               <Link
-                key={book._id}
-                to={"/books/" + book._id}
+                key={book.id}
+                to={"/books/" + book.id}
                 className="panel-block"
               >
                 <p>

@@ -52,7 +52,7 @@ function NewBook({ setIsLoading, isLoading }) {
 
     await addBook(token, bookData).then((res) => {
       if (axiosError(res)) {
-        toast.error(`Hiba! ${res.errorMessage}`);
+        toast.error(`${res.errorMessage}`);
         setIsLoading(false);
         return;
       }

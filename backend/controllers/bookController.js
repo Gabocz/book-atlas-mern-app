@@ -41,15 +41,6 @@ const registerBook = async (req, res) => {
 };
 
 const updateBook = async (req, res) => {
-  const { title, author, location, lang, images } = req.body;
-
-  const imagesObj = req.files.length
-    ? req.files.map((f) => ({
-        url: f.cloudStoragePublicUrl,
-        filename: f.cloudStorageObject,
-      }))
-    : { url: undefined, filename: undefined };
-
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -57,34 +48,47 @@ const updateBook = async (req, res) => {
       `Nem található felhasználó ${req.user.id} azonosítóval.`
     );
   }
+  const BookToUpdate = await Book.findById(req.params.id);
 
-  const book = await Book.findById(req.params.id);
-
-  if (!book) {
+  if (!BookToUpdate) {
     throw new CustomError.NotFoundError(
       `Nem található könyv ${req.params.id} azonosítóval.`
     );
   }
 
-  checkUserPermissions(req.user, book.user);
+  checkUserPermissions(req.user, BookToUpdate.user);
 
-  const updatedBook = await Book.findByIdAndUpdate(
-    req.params.id,
-    {
-      title,
-      author,
-      location,
-      lang,
-      images: req.files.length ? imagesObj : images,
-    },
-    { runValidators: true, new: true }
-  );
+  if (Object.keys(req.body).toString() === "userId") {
+    if (BookToUpdate.wishlistedBy.includes(user._id)) {
+      throw new CustomError.BadRequestError(
+        "Ezt a könyvet már kívánságlistáztad!"
+      );
+    }
+    BookToUpdate.wishlistedBy.push(req.body.userId);
+    await BookToUpdate.save();
+    res.status(StatusCodes.OK).json({ msg: "Könyv a kívánságlistához adva!" });
+  } else {
+    const { title, author, location, lang } = req.body;
 
-  res.status(StatusCodes.OK).json(updatedBook);
+    const imagesObj = req.files.length
+      ? req.files.map((f) => ({
+          url: f.cloudStoragePublicUrl,
+          filename: f.cloudStorageObject,
+        }))
+      : { url: undefined, filename: undefined };
+
+    (BookToUpdate.title = title),
+      (BookToUpdate.author = author),
+      (BookToUpdate.location = location),
+      (BookToUpdate.lang = lang),
+      (BookToUpdate.images = imagesObj),
+      await BookToUpdate.save();
+
+    res.status(StatusCodes.OK).json({ updatedBook: BookToUpdate });
+  }
 };
 
 const deleteBook = async (req, res) => {
-  // Get user using the id in the JWT
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -150,33 +154,6 @@ const getBook = async (req, res) => {
   res.status(StatusCodes.OK).json(book);
 };
 
-const getAllBooksByCurrentUser = async (req, res) => {
-  const user = await User.findById(req.user.id);
-
-  if (!user) {
-    throw new CustomError.NotFoundError(
-      `Nem található felhasználó ${req.user.id} azonosítóval.`
-    );
-  }
-
-  const books = await Book.find({ user: req.user.id });
-
-  res.status(StatusCodes.OK).json(books);
-};
-
-const getAllBooksByUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
-
-  if (!user) {
-    throw new CustomError.NotFoundError(
-      `Nem található felhasználó ${req.params.id} azonosítóval.`
-    );
-  }
-
-  const books = await Book.find({ user: req.params.id });
-  res.status(StatusCodes.OK).json(books);
-};
-
 const searchBooks = async (req, res) => {
   const searchTerm = req.query.query;
   const newReg = new RegExp(searchTerm, "i");
@@ -204,8 +181,6 @@ module.exports = {
   registerBook,
   getBooks,
   getBook,
-  getAllBooksByCurrentUser,
-  getAllBooksByUser,
   searchBooks,
   updateBook,
   deleteBook,

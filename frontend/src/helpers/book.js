@@ -51,8 +51,13 @@ export const updateBook = async (id, token, bookData) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const res = await axios.put(API_URL + id, bookData, config);
-  return res.data;
+  try {
+    const res = await axios.patch(API_URL + id, bookData, config);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
 };
 
 export const fetchBooks = async (currentPage) => {
@@ -62,20 +67,6 @@ export const fetchBooks = async (currentPage) => {
       books: res.data.books,
       totalPages: res.data.totalPages,
     };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const fetchMyBooks = async (id, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  try {
-    const res = await axios.get(API_URL + "user/" + id, config);
-    return res.data;
   } catch (error) {
     console.log(error);
   }

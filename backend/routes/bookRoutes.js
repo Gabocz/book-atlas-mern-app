@@ -13,8 +13,6 @@ const upload = multer({
 const {
   registerBook,
   getBooks,
-  getAllBooksByCurrentUser,
-  getAllBooksByUser,
   searchBooks,
   updateBook,
   deleteBook,
@@ -34,14 +32,10 @@ router
 
 router.route("/search").get(searchBooks);
 
-router.route("/user/:id").get(getAllBooksByUser);
-
-router.route("/user/:id").get(authenticateUser, getAllBooksByCurrentUser);
-
 router
   .route("/:id")
   .get(getBook)
-  .put(
+  .patch(
     authenticateUser,
     testUser,
     upload.array("image", 3),

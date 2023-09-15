@@ -2,19 +2,23 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-function UserWishList({ profileUser }) {
+function UserWishlist({ profileUser, userWishlist }) {
   const { user } = useContext(UserContext);
 
   return (
     <div className="panel">
       <h3 className="panel-heading">
-        {user.id === profileUser.id ? "Kívánságlistám:" : "Kivánságlistája: "}
+        {user.id === profileUser._id ? "Kívánságlistám:" : "Kivánságlistája: "}
       </h3>
-      {profileUser.wishlist.length ? (
+      {userWishlist.length ? (
         <>
           <ul>
-            {profileUser.wishlist.map((wishlitedBook) => (
-              <Link key={wishlitedBook.id} className="panel-block">
+            {userWishlist.map((wishlitedBook) => (
+              <Link
+                to={"/books/" + wishlitedBook.id}
+                key={wishlitedBook.id}
+                className="panel-block"
+              >
                 {wishlitedBook.author}: {wishlitedBook.title}
               </Link>
             ))}
@@ -32,4 +36,4 @@ function UserWishList({ profileUser }) {
   );
 }
 
-export default UserWishList;
+export default UserWishlist;

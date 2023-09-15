@@ -4,26 +4,26 @@ import { getUserById } from "../helpers/user";
 import { useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import UserUploads from "../components/UserUploads";
-import UserWishList from "../components/UserWishList";
+import UserWishlist from "../components/UserWishlist";
 import { toast } from "react-toastify";
+import { axiosError } from "../helpers/axiosError";
 
 function UserProfile({ isLoading, setIsLoading }) {
-  const [user, setUser] = useState(null);
-  const [usersBooks, setUsersBooks] = useState([]);
+  const [profileUser, setProfileUser] = useState(null);
   const params = useParams();
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const user = await getUserById(params.id);
-      setUser(user);
-      if (!user) {
-        toast.error(`A keresett azonosítóval felhasználó nem található.`);
+      await getUserById(params.id).then((res) => {
+        if (axiosError(res)) {
+          toast.error(`${res.errorMessage}`);
+          setIsLoading(false);
+          return;
+        }
+        setProfileUser(res);
         setIsLoading(false);
-        return;
-      }
-      setUsersBooks();
-      setIsLoading(false);
+      });
     })();
   }, [params.id, setIsLoading]);
 
@@ -31,19 +31,25 @@ function UserProfile({ isLoading, setIsLoading }) {
     return <Spinner />;
   }
 
-  return user ? (
+  return profileUser ? (
     <div className="column">
       <header className="message">
         <div className="message-header">
-          <p>"{user.name}" nevű felhasználó profilja</p>
+          <p>"{profileUser.name}" nevű felhasználó profilja</p>
         </div>
       </header>
       <div className="columns">
         <div className="column">
-          <UserUploads profileUser={user} usersBooks={usersBooks} />
+          <UserUploads
+            profileUser={profileUser}
+            userUploads={profileUser.uploadedBooks}
+          />
         </div>
         <div className="column is-third">
-          <UserWishList profileUser={user} usersBooks={usersBooks} />
+          <UserWishlist
+            profileUser={profileUser}
+            userWishlist={profileUser.wishlistedBooks}
+          />
         </div>
       </div>
       <div className="panel-block">

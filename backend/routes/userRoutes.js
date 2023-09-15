@@ -5,7 +5,7 @@ const {
   registerUser,
   loginUser,
   updateUser,
-  addBookToMyWishlist,
+  getCurrentUser,
   getSingleUser,
   getAllUsers,
 } = require("../controllers/userController");
@@ -15,9 +15,9 @@ const testUser = require("../middleware/testUser");
 router.route("/").get(authenticateUser, authorizeUser("admin"), getAllUsers);
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
+router.route("/my-profile").get(authenticateUser, getCurrentUser);
 router
   .route("/:id")
-  .post(authenticateUser, testUser, addBookToMyWishlist)
   .put(authenticateUser, testUser, updateUser)
   .get(getSingleUser);
 

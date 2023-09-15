@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 
-const UserSchema = mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -32,8 +32,28 @@ const UserSchema = mongoose.Schema(
       default: "user",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+  }
 );
+
+UserSchema.virtual("uploadedBooks", {
+  ref: "Book",
+  localField: "_id",
+  foreignField: "user",
+});
+
+UserSchema.methods.getWishlistedBooks = async function () {
+  try {
+    const wishlistedBooks = await this.model("Book")
+      .find({ wishlistedBy: this._id })
+      .exec();
+    return wishlistedBooks;
+  } catch (error) {
+    throw error;
+  }
+};
 
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return;

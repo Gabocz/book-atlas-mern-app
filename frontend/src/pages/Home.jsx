@@ -39,7 +39,9 @@ function Home({ setIsLoading, isLoading }) {
             </div>
           ))
         ) : (
-          <p>Még nincsenek feltöltött könyvek.</p>
+          <div className="column">
+            <p className="is-size-5">Még nincsenek feltöltött könyvek.</p>
+          </div>
         )}
       </div>
       <Pagination

@@ -59,7 +59,7 @@ const BookSchema = mongoose.Schema(
 );
 
 BookSchema.pre("save", async function () {
-  if (!this.isModified("geolocation")) return;
+  if (!this.isModified("location")) return;
   this.geolocation = await getGeoLocation(this.location);
 });
 

@@ -6,8 +6,7 @@ import { toast } from "react-toastify";
 import Map from "../components/Map";
 import ImgCarouselControl from "../components/ImgCarouselControl";
 import BackButton from "../components/BackButton";
-import { fetchBook, deleteBook } from "../helpers/book";
-import { addBookToWishlist } from "../helpers/user";
+import { fetchBook, deleteBook, updateBook } from "../helpers/book";
 import Spinner from "../components/Spinner";
 import BookCard from "../components/BookCard";
 import { axiosError } from "../helpers/axiosError";
@@ -65,7 +64,7 @@ function Book({ isLoading, setIsLoading }) {
 
   const handleAddToWishlist = async () => {
     setIsLoading(true);
-    await addBookToWishlist(user.id, user.token, book._id).then((res) => {
+    await updateBook(book._id, user.token, { userId: user.id }).then((res) => {
       if (axiosError(res)) {
         setIsWishlistedByUser(false);
         setIsLoading(false);

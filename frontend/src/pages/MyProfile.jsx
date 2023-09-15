@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { FaUser, FaEnvelope, FaEdit, FaSave } from "react-icons/fa";
+import UserUploads from "../components/UserUploads";
+import UserWishlist from "../components/UserWishlist";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/UserContext";
-import { fetchMyBooks } from "../helpers/book";
+import { getCurrentUser } from "../helpers/user";
 import Spinner from "../components/Spinner";
-import UserUploads from "../components/UserUploads";
-import UserWishList from "../components/UserWishList";
 import BackButton from "../components/BackButton";
 
 function Profile({ setIsLoading, isLoading }) {
@@ -21,16 +21,16 @@ function Profile({ setIsLoading, isLoading }) {
   const { name, email } = formData;
 
   const [changeDetails, setChangeDetails] = useState(false);
-  const [usersBooks, setUsersBooks] = useState([]);
+  const [currentUserUploads, setCurrentUserUploads] = useState([]);
+  const [currentUserWishlist, setCurrentUserWishlist] = useState([]);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const books = await fetchMyBooks(id, token);
-      if (books) {
-        setUsersBooks(books);
-        setIsLoading(false);
-      }
+      const user = await getCurrentUser(token);
+      setCurrentUserUploads(user.uploadedBooks);
+      setCurrentUserWishlist(user.wishlistedBooks);
+      setIsLoading(false);
     })();
   }, [setIsLoading, id, token]);
 
@@ -158,10 +158,10 @@ function Profile({ setIsLoading, isLoading }) {
           </div>
         </div>
         <div className="column is-third">
-          <UserUploads profileUser={user} usersBooks={usersBooks} />
+          <UserUploads profileUser={user} userUploads={currentUserUploads} />
         </div>
         <div className="column is-third">
-          <UserWishList profileUser={user} usersBooks={usersBooks} />
+          <UserWishlist profileUser={user} userWishlist={currentUserWishlist} />
         </div>
       </div>
       <BackButton />
