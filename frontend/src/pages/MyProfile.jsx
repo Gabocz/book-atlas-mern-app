@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { FaUser, FaEnvelope, FaEdit, FaSave } from "react-icons/fa";
 import UserUploads from "../components/UserUploads";
-import UserWishlist from "../components/UserWishlist";
+import UserWishlist from "../components/UserWishList";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/UserContext";
 import { getCurrentUser } from "../helpers/user";
