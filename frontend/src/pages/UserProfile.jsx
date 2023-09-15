@@ -4,7 +4,7 @@ import { getUserById } from "../helpers/user";
 import { useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import UserUploads from "../components/UserUploads";
-import UserWishlist from "../components/UserWishlist";
+import UserWishList from "../components/UserWishList";
 import { toast } from "react-toastify";
 import { axiosError } from "../helpers/axiosError";
 
@@ -46,7 +46,7 @@ function UserProfile({ isLoading, setIsLoading }) {
           />
         </div>
         <div className="column is-third">
-          <UserWishlist
+          <UserWishList
             profileUser={profileUser}
             userWishlist={profileUser.wishlistedBooks}
           />

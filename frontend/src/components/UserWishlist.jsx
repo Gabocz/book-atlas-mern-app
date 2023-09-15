@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-function UserWishlist({ profileUser, userWishlist }) {
+function UserWishList({ profileUser, userWishlist }) {
   const { user } = useContext(UserContext);
 
   return (
@@ -36,4 +36,4 @@ function UserWishlist({ profileUser, userWishlist }) {
   );
 }
 
-export default UserWishlist;
+export default UserWishList;
