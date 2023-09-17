@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import IsWishlistedByUser from "./IsWishlistedByUser";
 
 function UserWishlist({ profileUser, userWishlist }) {
   const { user } = useContext(UserContext);
@@ -8,7 +9,7 @@ function UserWishlist({ profileUser, userWishlist }) {
   return (
     <div className="panel">
       <h3 className="panel-heading">
-        {user.id === profileUser._id ? "Kívánságlistám:" : "Kivánságlistája: "}
+        {user.id === profileUser.id ? "Kívánságlistám:" : "Kivánságlistája: "}
       </h3>
       {userWishlist.length ? (
         <>
@@ -19,13 +20,14 @@ function UserWishlist({ profileUser, userWishlist }) {
                 key={wishlitedBook.id}
                 className="panel-block"
               >
+                <IsWishlistedByUser />
                 {wishlitedBook.author}: {wishlitedBook.title}
               </Link>
             ))}
           </ul>
           <div className="panel-block">
             <button className="button is-link is-outlined is-fullwidth">
-              Következő
+              Több betöltése
             </button>
           </div>
         </>

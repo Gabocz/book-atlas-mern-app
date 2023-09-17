@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { FaEdit, FaHeart, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaHeart, FaRegHeart, FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Map from "../components/Map";
 import ImgCarouselControl from "../components/ImgCarouselControl";
@@ -60,6 +60,25 @@ function Book({ isLoading, setIsLoading }) {
         navigate(`/users/my-profile`);
       });
     }
+  };
+
+  const handleRemoveFromWishlist = async () => {
+    setIsLoading(true);
+    await updateBook(
+      book._id,
+      user.token,
+      { userId: user.id },
+      { method: "delete" }
+    ).then((res) => {
+      if (axiosError(res)) {
+        setIsLoading(false);
+        toast.error(res.errorMessage);
+        return;
+      }
+      toast.success("Könyv levéve a kívánságlistáról.");
+      setIsWishlistedByUser(false);
+      setIsLoading(false);
+    });
   };
 
   const handleAddToWishlist = async () => {
@@ -136,13 +155,28 @@ function Book({ isLoading, setIsLoading }) {
                   <>
                     <p className="control">
                       <button
-                        onClick={handleAddToWishlist}
+                        onClick={
+                          !isWishlistedByUser
+                            ? handleAddToWishlist
+                            : handleRemoveFromWishlist
+                        }
                         className="button is-outlined is-danger"
                       >
-                        <span className="icon">
-                          <FaHeart />
-                        </span>
-                        <span>Kívánságlistára</span>
+                        {isWishlistedByUser ? (
+                          <>
+                            <span className="icon">
+                              <FaRegHeart />
+                            </span>
+                            <span>Levétel a kívánságlistáról</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="icon">
+                              <FaHeart />
+                            </span>
+                            <span>Kívánságlistára</span>
+                          </>
+                        )}
                       </button>
                     </p>
                     <p className="control">

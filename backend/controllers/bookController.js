@@ -56,10 +56,17 @@ const updateBook = async (req, res) => {
     );
   }
 
-  checkUserPermissions(req.user, BookToUpdate.user);
-
   if (Object.keys(req.body).toString() === "userId") {
-    if (BookToUpdate.wishlistedBy.includes(user._id)) {
+    if (req.headers.method === "delete") {
+      const filteredWishlist = BookToUpdate.wishlistedBy.filter(
+        (id) => !id.equals(user._id)
+      );
+      BookToUpdate.wishlistedBy = filteredWishlist;
+      await BookToUpdate.save();
+      return res
+        .status(StatusCodes.OK)
+        .json({ msg: "Könyv levéve a kívánságlistáról!" });
+    } else if (BookToUpdate.wishlistedBy.includes(user._id)) {
       throw new CustomError.BadRequestError(
         "Ezt a könyvet már kívánságlistáztad!"
       );
@@ -68,6 +75,7 @@ const updateBook = async (req, res) => {
     await BookToUpdate.save();
     res.status(StatusCodes.OK).json({ msg: "Könyv a kívánságlistához adva!" });
   } else {
+    checkUserPermissions(req.user, BookToUpdate.user);
     const { title, author, location, lang } = req.body;
 
     const imagesObj = req.files.length

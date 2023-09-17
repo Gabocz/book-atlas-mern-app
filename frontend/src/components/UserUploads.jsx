@@ -27,7 +27,7 @@ function UserUploads({ profileUser, userUploads }) {
           </ul>
           <div className="panel-block">
             <button className="button is-link is-outlined is-fullwidth">
-              Következő
+              Több betöltése
             </button>
           </div>
         </>

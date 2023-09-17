@@ -45,10 +45,11 @@ export const addBook = async (token, bookData) => {
   }
 };
 
-export const updateBook = async (id, token, bookData) => {
+export const updateBook = async (id, token, bookData, methodObj) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+      method: methodObj ? methodObj.method : "patch",
     },
   };
   try {
