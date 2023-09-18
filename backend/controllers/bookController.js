@@ -78,18 +78,18 @@ const updateBook = async (req, res) => {
     checkUserPermissions(req.user, BookToUpdate.user);
     const { title, author, location, lang } = req.body;
 
-    const imagesObj = req.files.length
-      ? req.files.map((f) => ({
-          url: f.cloudStoragePublicUrl,
-          filename: f.cloudStorageObject,
-        }))
-      : { url: undefined, filename: undefined };
+    const imagesObj =
+      req.files.length &&
+      req.files.map((f) => ({
+        url: f.cloudStoragePublicUrl,
+        filename: f.cloudStorageObject,
+      }));
 
     (BookToUpdate.title = title),
       (BookToUpdate.author = author),
       (BookToUpdate.location = location),
       (BookToUpdate.lang = lang),
-      (BookToUpdate.images = imagesObj),
+      (BookToUpdate.images = imagesObj || BookToUpdate.images),
       await BookToUpdate.save();
 
     res.status(StatusCodes.OK).json({ updatedBook: BookToUpdate });
