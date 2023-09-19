@@ -25,7 +25,7 @@ app.use(
   rateLimiter({
     windowMs: 15 * 60 * 1000,
     max: 100,
-    message: "Túl sok kérés érkezett az IP címedről. Próbáld meg később.",
+    msg: "Túl sok kérés érkezett az IP címedről. Próbáld meg később.",
   })
 );
 
