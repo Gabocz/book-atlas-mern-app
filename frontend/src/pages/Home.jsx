@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import BookCard from "../components/BookCard";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import { fetchBooks } from "../helpers/book";
+import { UserContext } from "../context/UserContext";
 
 function Home({ setIsLoading, isLoading }) {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const { user } = useContext(UserContext);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -21,7 +23,7 @@ function Home({ setIsLoading, isLoading }) {
       setTotalPages(totalPages);
       setIsLoading(false);
     })();
-  }, [setIsLoading, currentPage]);
+  }, [setIsLoading, currentPage, user]);
 
   if (isLoading) {
     return <Spinner />;
@@ -34,7 +36,13 @@ function Home({ setIsLoading, isLoading }) {
           books.map((book) => (
             <div key={book._id} className="column is-one-quarter">
               <Link to={"/books/" + book._id}>
-                <BookCard book={book} />
+                <BookCard
+                  book={book}
+                  wishlistedByUser={
+                    user &&
+                    book.wishlistedBy.map((user) => user.id).includes(user.id)
+                  }
+                />
               </Link>
             </div>
           ))

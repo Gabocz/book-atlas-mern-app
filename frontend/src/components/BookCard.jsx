@@ -1,25 +1,14 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import IsWishlistedByUser from "./IsWishlistedByUser";
 
-function BookCard({ book, ImgCarouselControl, bookOwner, isWishlistedByUser }) {
+function BookCard({ book, ImgCarouselControl, bookOwner, wishlistedByUser }) {
   const { user } = useContext(UserContext);
 
   const [currentImgIdx, setCurrentImgIdx] = useState(0);
 
-  const [alreadyWishListed, setAlreadyWishlisted] = useState(false);
-
-  const { author, title, images, location, wishlistedBy } = book;
-
-  useEffect(() => {
-    if (user) {
-      setAlreadyWishlisted(
-        wishlistedBy.map((item) => item._id).includes(user.id)
-      );
-    }
-    return;
-  }, [wishlistedBy, user]);
+  const { author, title, images, location } = book;
 
   return (
     <div className="card">
@@ -40,9 +29,7 @@ function BookCard({ book, ImgCarouselControl, bookOwner, isWishlistedByUser }) {
           <div className="media-content">
             <p className="title is-size-4-desktop is-size-5-tablet is-size-6-mobile">
               {title}
-              {user && (alreadyWishListed || isWishlistedByUser) && (
-                <IsWishlistedByUser />
-              )}
+              {user && wishlistedByUser && <IsWishlistedByUser />}
             </p>
             <p className="subtitle is-6">{author}</p>
             <p className="subtitle is-size-6-desktop is-size-7-tablet is-size-7-mobile">

@@ -61,9 +61,17 @@ export const updateBook = async (id, token, bookData, methodObj) => {
   }
 };
 
-export const fetchBooks = async (currentPage) => {
+export const fetchBooks = async (currentPage, token) => {
+  let config;
+  if (token) {
+    config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  }
   try {
-    const res = await axios.get(API_URL + "?page=" + currentPage);
+    const res = await axios.get(API_URL + "?page=" + currentPage, config);
     return {
       books: res.data.books,
       totalPages: res.data.totalPages,

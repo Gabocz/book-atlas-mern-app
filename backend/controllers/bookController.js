@@ -2,7 +2,9 @@ const Book = require("../models/bookModel");
 const User = require("../models/userModel");
 const CustomError = require("../errors");
 const checkUserPermissions = require("../utils/checkUserPermissions");
+const getUserFromToken = require("../utils/getUserFromToken");
 const { StatusCodes } = require("http-status-codes");
+const stripBooks = require("../utils/stripBooks.js");
 
 const registerBook = async (req, res) => {
   const { title, author, location, lang } = req.body;
@@ -63,9 +65,10 @@ const updateBook = async (req, res) => {
       );
       BookToUpdate.wishlistedBy = filteredWishlist;
       await BookToUpdate.save();
-      return res
-        .status(StatusCodes.OK)
-        .json({ msg: "Könyv levéve a kívánságlistáról!" });
+      return res.status(StatusCodes.OK).json({
+        msg: "Könyv levéve a kívánságlistáról!",
+        data: BookToUpdate,
+      });
     } else if (BookToUpdate.wishlistedBy.includes(user._id)) {
       throw new CustomError.BadRequestError(
         "Ezt a könyvet már kívánságlistáztad!"
@@ -73,7 +76,10 @@ const updateBook = async (req, res) => {
     }
     BookToUpdate.wishlistedBy.push(req.body.userId);
     await BookToUpdate.save();
-    res.status(StatusCodes.OK).json({ msg: "Könyv a kívánságlistához adva!" });
+    res.status(StatusCodes.OK).json({
+      msg: "Könyv a kívánságlistához adva!",
+      data: BookToUpdate,
+    });
   } else {
     checkUserPermissions(req.user, BookToUpdate.user);
     const { title, author, location, lang } = req.body;

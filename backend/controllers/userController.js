@@ -54,11 +54,17 @@ const loginUser = async (req, res) => {
     throw new CustomError.UnauthenticatedError("Érvénytelen hitelesítés.");
   }
 
+  const wishlistedBooks = await user.getWishlistedBooks();
+  user.wishlistedBooks = stripBooks(wishlistedBooks);
+
   res.status(StatusCodes.OK).json({
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    token: user.createJWT(),
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      token: user.createJWT(),
+      wishlistedBooks: user.wishlistedBooks,
+    },
   });
 };
 

@@ -14,7 +14,7 @@ import { axiosError } from "../helpers/axiosError";
 function Book({ isLoading, setIsLoading }) {
   const { user } = useContext(UserContext);
   const [book, setBook] = useState(null);
-  const [isWishlistedByUser, setIsWishlistedByUser] = useState(false);
+  const [wishlistedByUser, setWishlistedByUser] = useState(false);
   const [mapCenter, setMapCenter] = useState({
     lat: 46.2530102,
     lng: 20.1414253,
@@ -33,13 +33,12 @@ function Book({ isLoading, setIsLoading }) {
           return;
         }
         setBook(res);
-        const { geolocation } = res;
         if (user) {
-          const { wishlistedBy } = res;
-          setIsWishlistedByUser(
-            wishlistedBy.map((item) => item._id).includes(user.id)
+          setWishlistedByUser(
+            res.wishlistedBy.map((user) => user.id).includes(user.id)
           );
         }
+        const { geolocation } = res;
         setMapCenter(geolocation);
         setIsLoading(false);
       });
@@ -71,13 +70,15 @@ function Book({ isLoading, setIsLoading }) {
       { method: "delete" }
     ).then((res) => {
       if (axiosError(res)) {
-        setIsLoading(false);
         toast.error(res.errorMessage);
+        setIsLoading(false);
         return;
+      } else {
+        setBook(res.data);
+        setWishlistedByUser(false);
+        toast.success("Könyv levéve a kívánságlistáról.");
+        setIsLoading(false);
       }
-      toast.success("Könyv levéve a kívánságlistáról.");
-      setIsWishlistedByUser(false);
-      setIsLoading(false);
     });
   };
 
@@ -85,14 +86,15 @@ function Book({ isLoading, setIsLoading }) {
     setIsLoading(true);
     await updateBook(book._id, user.token, { userId: user.id }).then((res) => {
       if (axiosError(res)) {
-        setIsWishlistedByUser(false);
         setIsLoading(false);
         toast.error(res.errorMessage);
         return;
+      } else {
+        setBook(res.data);
+        setWishlistedByUser(true);
+        toast.success("Könyv kívánságlistához adva!");
+        setIsLoading(false);
       }
-      toast.success("Könyv kívánságlistához adva!");
-      setIsWishlistedByUser(true);
-      setIsLoading(false);
     });
   };
 
@@ -109,7 +111,7 @@ function Book({ isLoading, setIsLoading }) {
               book={book}
               bookOwner={book.user}
               ImgCarouselControl={ImgCarouselControl}
-              isWishlistedByUser={isWishlistedByUser}
+              wishlistedByUser={wishlistedByUser}
             />
           </div>
           <div className="column is-half">
@@ -153,32 +155,31 @@ function Book({ isLoading, setIsLoading }) {
                 user &&
                 book.user !== null && (
                   <>
-                    <p className="control">
-                      <button
-                        onClick={
-                          !isWishlistedByUser
-                            ? handleAddToWishlist
-                            : handleRemoveFromWishlist
-                        }
-                        className="button is-outlined is-danger"
-                      >
-                        {isWishlistedByUser ? (
-                          <>
-                            <span className="icon">
-                              <FaRegHeart />
-                            </span>
-                            <span>Levétel a kívánságlistáról</span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="icon">
-                              <FaHeart />
-                            </span>
-                            <span>Kívánságlistára</span>
-                          </>
-                        )}
-                      </button>
-                    </p>
+                    {wishlistedByUser ? (
+                      <p className="control">
+                        <button
+                          onClick={handleRemoveFromWishlist}
+                          className="button is-outlined is-danger"
+                        >
+                          <span className="icon">
+                            <FaRegHeart />
+                          </span>
+                          <span>Levétel a kívánságlistáról</span>
+                        </button>
+                      </p>
+                    ) : (
+                      <p className="control">
+                        <button
+                          onClick={handleAddToWishlist}
+                          className="button is-outlined is-danger"
+                        >
+                          <span className="icon">
+                            <FaHeart />
+                          </span>
+                          <span>Kívánságlistára</span>
+                        </button>
+                      </p>
+                    )}
                     <p className="control">
                       <a
                         className="button is-success"

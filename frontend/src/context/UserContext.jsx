@@ -59,12 +59,12 @@ const UserContextProvider = ({ children }) => {
 
   const login = async (userData) => {
     try {
-      const response = await axios.post(API_URL + "login", userData);
-      if (response.data) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        setUser(response.data);
+      const { data } = await axios.post(API_URL + "login", userData);
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setUser(data.user);
       }
-      return response.data;
+      return data.user;
     } catch (error) {
       console.log(error);
       setUser(null);
@@ -79,6 +79,7 @@ const UserContextProvider = ({ children }) => {
 
   const contextValue = {
     user,
+    setUser,
     registerUser,
     updateUser,
     login,
