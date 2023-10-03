@@ -2,9 +2,7 @@ const Book = require("../models/bookModel");
 const User = require("../models/userModel");
 const CustomError = require("../errors");
 const checkUserPermissions = require("../utils/checkUserPermissions");
-const getUserFromToken = require("../utils/getUserFromToken");
 const { StatusCodes } = require("http-status-codes");
-const stripBooks = require("../utils/stripBooks.js");
 
 const registerBook = async (req, res) => {
   const { title, author, location, lang } = req.body;
