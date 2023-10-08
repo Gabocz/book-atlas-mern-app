@@ -6,9 +6,9 @@ import Spinner from "../components/Spinner";
 import { fetchBooks } from "../helpers/book";
 import { UserContext } from "../context/UserContext";
 
-function Home({ setIsLoading, isLoading }) {
+function Home({ setIsLoading, isLoading, currentPage, setCurrentPage }) {
   const [books, setBooks] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+
   const [totalPages, setTotalPages] = useState(1);
   const { user } = useContext(UserContext);
 

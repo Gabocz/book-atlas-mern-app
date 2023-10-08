@@ -5,6 +5,7 @@ import {
   FaSignOutAlt,
   FaUpload,
   FaUser,
+  FaQuestionCircle,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -12,7 +13,7 @@ import { UserContext } from "../context/UserContext";
 import { searchBooks } from ".//../helpers/book";
 import TestUserLogin from "./TestUserLogin";
 
-function Navbar({ setFoundBooks, setIsLoading }) {
+function Navbar({ setFoundBooks, setIsLoading, setCurrentPage }) {
   const [isActive, setIsActive] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -60,7 +61,11 @@ function Navbar({ setFoundBooks, setIsLoading }) {
         aria-label="main navigation"
       >
         <div className="navbar-brand">
-          <Link className="navbar-item   has-text-weight-bold is-size-4" to="/">
+          <Link
+            className="navbar-item   has-text-weight-bold is-size-4"
+            to="/"
+            onClick={() => setCurrentPage(1)}
+          >
             <span className="icon is-small mr-1">
               <FaBookOpen />
             </span>
@@ -79,10 +84,7 @@ function Navbar({ setFoundBooks, setIsLoading }) {
             <span aria-hidden="true"></span>
           </Link>
         </div>
-        <div
-          id="navbarBasicExample"
-          className={isActive ? "navbar-menu is-active" : "navbar-menu"}
-        >
+        <div className={isActive ? "navbar-menu is-active" : "navbar-menu"}>
           <div className="navbar-start">
             <div className="navbar-item">
               <form onSubmit={handleSubmit}>
@@ -91,7 +93,7 @@ function Navbar({ setFoundBooks, setIsLoading }) {
                     <input
                       onChange={handleChange}
                       value={searchTerm}
-                      className="input is-rounded"
+                      className="input is-info is-rounded"
                       type="text"
                       placeholder="Keresés"
                     />
@@ -102,6 +104,15 @@ function Navbar({ setFoundBooks, setIsLoading }) {
                 </div>
               </form>
             </div>
+            <div className="navbar-item">
+              <Link
+                to="/cluster-map"
+                className="button is-info is-rounded"
+                role="button"
+              >
+                Klasztertérkép
+              </Link>
+            </div>
           </div>
           {user ? (
             <>
@@ -109,6 +120,9 @@ function Navbar({ setFoundBooks, setIsLoading }) {
                 <div className="navbar-item">
                   <div className="buttons">
                     <Link to="/about" className="button is-light">
+                      <span className="icon">
+                        <FaQuestionCircle />
+                      </span>
                       <span className="is-underlined">Rólunk</span>
                     </Link>
                   </div>

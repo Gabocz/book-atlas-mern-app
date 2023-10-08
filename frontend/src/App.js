@@ -17,8 +17,10 @@ import EditBook from "./pages/EditBook";
 import SearchResults from "./pages/SearchResults";
 import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
+import ClusterMap from "./pages/ClusterMap";
 
 function App() {
+  const [currentPage, setCurrentPage] = useState(1);
   const [foundBooks, setFoundBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,12 +29,21 @@ function App() {
       <UserContextProvider>
         <Router>
           <div className="container is-fluid">
-            <Navbar setFoundBooks={setFoundBooks} setIsLoading={setIsLoading} />
+            <Navbar
+              setFoundBooks={setFoundBooks}
+              setIsLoading={setIsLoading}
+              setCurrentPage={setCurrentPage}
+            />
             <Routes>
               <Route
                 path="/"
                 element={
-                  <Home setIsLoading={setIsLoading} isLoading={isLoading} />
+                  <Home
+                    setIsLoading={setIsLoading}
+                    isLoading={isLoading}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
                 }
               />
               <Route
@@ -100,6 +111,7 @@ function App() {
                   />
                 }
               ></Route>
+              <Route path="/cluster-map" element={<ClusterMap />}></Route>
               <Route path="*" element={<NotFound />}></Route>
             </Routes>
           </div>

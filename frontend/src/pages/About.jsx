@@ -10,7 +10,7 @@ function About() {
       <div className="block">
         Azt is hisszük, hogy az igényes könyvtár kialakításához{" "}
         <strong>nincs szükség </strong>
-        sok pénzre, sem újabb erdők kivágására,{" "}
+        sok pénzre. Sem újabb erdők kivágására,{" "}
         <strong>környezetszennyező</strong>,<strong> energiaigényes</strong>{" "}
         technológiákra.
       </div>
