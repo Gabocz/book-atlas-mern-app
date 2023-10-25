@@ -111,7 +111,15 @@ function App() {
                   />
                 }
               ></Route>
-              <Route path="/cluster-map" element={<ClusterMap />}></Route>
+              <Route
+                path="/cluster-map"
+                element={
+                  <ClusterMap
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
+                  />
+                }
+              ></Route>
               <Route path="*" element={<NotFound />}></Route>
             </Routes>
           </div>

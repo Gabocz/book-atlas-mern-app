@@ -1,4 +1,5 @@
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
+import DefaultMarker from "./DefaultMarker";
 
 function Map({ mapCenter, author, title }) {
   return (
@@ -9,14 +10,14 @@ function Map({ mapCenter, author, title }) {
       }}
       center={[mapCenter.lat, mapCenter.lng]}
       zoom={12}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={[mapCenter.lat, mapCenter.lng]}>
-        <Popup>
-          {author}: <br /> {title}
-        </Popup>
-      </Marker>
+      <DefaultMarker
+        position={[mapCenter.lat, mapCenter.lng]}
+        title={title}
+        author={author}
+      ></DefaultMarker>
     </MapContainer>
   );
 }
