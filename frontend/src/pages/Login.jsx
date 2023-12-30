@@ -4,6 +4,7 @@ import BackButton from "../components/BackButton";
 import { FaEnvelope, FaSignInAlt } from "react-icons/fa";
 import { UserContext } from "../context/UserContext";
 import { toast } from "react-toastify";
+import { axiosError } from "../helpers/axiosError";
 
 function Login() {
   const { login, user } = useContext(UserContext);
@@ -31,16 +32,16 @@ function Login() {
       password,
     };
 
-    await login(userData).then((data) => {
-      if (data) {
+    await login(userData).then((res) => {
+      if (axiosError(res)) {
+        toast.error("Hibás belépési adatok.");
+      } else {
+        toast.success("Sikeres belépés.");
         navigate("/");
         setFormData({
           email: "",
           password: "",
         });
-        toast.success("Sikeres belépés.");
-      } else {
-        toast.error("Hibás belépési adatok.");
       }
     });
   };
